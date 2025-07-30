@@ -52,8 +52,13 @@
         }
 
         @keyframes scrollText {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         .back-to-top {
@@ -175,7 +180,8 @@
         .contact-slider-container {
             overflow: hidden;
             position: relative;
-            background-color: #dd9103; /* Changé en orange */
+            background-color: #dd9103;
+            /* Changé en orange */
             border-top: 1px solid #e9ecef;
             border-bottom: 1px solid #e9ecef;
         }
@@ -186,7 +192,8 @@
             padding-right: 100%;
             animation: scrollText 25s linear infinite;
             font-size: 0.9rem;
-            color: white; /* Texte en blanc pour meilleur contraste */
+            color: white;
+            /* Texte en blanc pour meilleur contraste */
         }
 
         .contact-slider-paused {
@@ -194,11 +201,17 @@
         }
 
         @keyframes scrollText {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         @keyframes slideshow {
+
             0%,
             33% {
                 background-image: url('https://source.unsplash.com/random/1920x1080/?media,studio');
@@ -286,12 +299,12 @@
             .hero-slideshow {
                 height: 200px;
             }
-            
+
             .dashboard-modal-content {
                 width: 95% !important;
                 margin: 1rem auto !important;
             }
-            
+
             .dashboard-tab-content {
                 padding: 1rem !important;
             }
@@ -301,11 +314,11 @@
                 min-width: 160px;
                 max-width: 160px;
             }
-            
+
             .press-item img {
                 height: 220px;
             }
-            
+
             .press-scroll-left,
             .press-scroll-right {
                 display: none !important;
@@ -339,21 +352,17 @@
 
     <!-- Header -->
     <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4 header-content">
+        <div
+            class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4 header-content">
             <div class="flex items-center space-x-2">
                 <i class="fas fa-play-circle text-3xl text-yellow-400"></i>
                 <h1 class="text-xl md:text-2xl font-bold">Excellence Media Numérique</h1>
             </div>
 
-            <div id="login-container">
-                <div id="g_id_onload"
-                    data-client_id="110615064392-3gchkeu93jn0mm698h73ucc2da6tg674.apps.googleusercontent.com"
-                    data-callback="handleCredentialResponse" data-login_uri="http://localhost:5500"
-                    data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline"
-                    data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
-                </div>
+            <div id="g_id_onload"
+                data-client_id="110615064392-3gchkeu93jn0mm698h73ucc2da6tg674.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse"
+                data-login_uri="https://emntv.github.io/excellencemedianumerique/" data-auto_prompt="false">
             </div>
         </div>
     </header>
@@ -386,10 +395,14 @@
                     <!-- Press items will be loaded here dynamically -->
                 </div>
             </div>
-            <button class="press-scroll-left absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity" aria-label="Scroll left">
+            <button
+                class="press-scroll-left absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity"
+                aria-label="Scroll left">
                 <i class="fas fa-chevron-left text-blue-900"></i>
             </button>
-            <button class="press-scroll-right absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity" aria-label="Scroll right">
+            <button
+                class="press-scroll-right absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity"
+                aria-label="Scroll right">
                 <i class="fas fa-chevron-right text-blue-900"></i>
             </button>
         </div>
@@ -401,7 +414,8 @@
                     <div class="absolute inset-0 bg-black bg-opacity-50"></div>
                 </div>
 
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
+                <div
+                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold text-blue-900" id="press-modal-title"></h3>
@@ -415,7 +429,8 @@
                         <p class="text-gray-600" id="press-modal-description"></p>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="button" id="close-press-modal-bottom" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        <button type="button" id="close-press-modal-bottom"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
                             Fermer
                         </button>
                     </div>
@@ -498,16 +513,20 @@
                     <!-- Onglets -->
                     <div class="border-b border-gray-200 mb-6 dashboard-tabs">
                         <nav class="-mb-px flex space-x-8 overflow-x-auto">
-                            <button id="videos-tab" class="dashboard-tab border-b-2 border-blue-900 text-blue-900 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                            <button id="videos-tab"
+                                class="dashboard-tab border-b-2 border-blue-900 text-blue-900 px-1 py-4 text-sm font-medium whitespace-nowrap">
                                 Vidéos
                             </button>
-                            <button id="slides-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                            <button id="slides-tab"
+                                class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
                                 Carrousel
                             </button>
-                            <button id="press-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                            <button id="press-tab"
+                                class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
                                 Presse Écrite
                             </button>
-                            <button id="contact-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                            <button id="contact-tab"
+                                class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
                                 Bande de Communiqué
                             </button>
                         </nav>
@@ -567,13 +586,15 @@
                             <h4 class="font-bold mb-4">Ajouter une image au carrousel</h4>
                             <form id="add-slide-form" class="space-y-4">
                                 <div>
-                                    <label for="slide-title" class="block text-sm font-medium text-gray-700">Titre (optionnel)</label>
+                                    <label for="slide-title" class="block text-sm font-medium text-gray-700">Titre
+                                        (optionnel)</label>
                                     <input type="text" id="slide-title"
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
 
                                 <div>
-                                    <label for="slide-url" class="block text-sm font-medium text-gray-700">URL de l'image</label>
+                                    <label for="slide-url" class="block text-sm font-medium text-gray-700">URL de
+                                        l'image</label>
                                     <input type="url" id="slide-url" required
                                         placeholder="https://example.com/image.jpg"
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -610,7 +631,8 @@
                             <h4 class="font-bold mb-4">Ajouter un nouvel article</h4>
                             <form id="add-press-form" class="space-y-4">
                                 <div>
-                                    <label for="press-title" class="block text-sm font-medium text-gray-700">Titre de l'article</label>
+                                    <label for="press-title" class="block text-sm font-medium text-gray-700">Titre de
+                                        l'article</label>
                                     <input type="text" id="press-title" required
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
@@ -621,14 +643,20 @@
                                         <div class="file-upload-container" id="press-upload-container">
                                             <div class="flex flex-col items-center justify-center">
                                                 <i class="fas fa-cloud-upload-alt text-3xl text-blue-500 mb-2"></i>
-                                                <p class="text-sm text-gray-600">Glissez-déposez une image ou cliquez pour sélectionner</p>
-                                                <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, GIF</p>
+                                                <p class="text-sm text-gray-600">Glissez-déposez une image ou cliquez
+                                                    pour sélectionner</p>
+                                                <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, GIF
+                                                </p>
                                             </div>
-                                            <img id="press-upload-preview" class="file-upload-preview" src="" alt="Aperçu de l'image">
-                                            <input type="file" id="press-upload-input" class="file-upload-input" accept="image/*">
+                                            <img id="press-upload-preview" class="file-upload-preview" src=""
+                                                alt="Aperçu de l'image">
+                                            <input type="file" id="press-upload-input" class="file-upload-input"
+                                                accept="image/*">
                                         </div>
                                         <div class="mt-2">
-                                            <label for="press-image-url" class="block text-sm font-medium text-gray-700">Ou entrer une URL d'image</label>
+                                            <label for="press-image-url"
+                                                class="block text-sm font-medium text-gray-700">Ou entrer une URL
+                                                d'image</label>
                                             <input type="url" id="press-image-url"
                                                 placeholder="https://example.com/image.jpg"
                                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -667,7 +695,8 @@
                             <h4 class="font-bold mb-4">Modifier la Bande de Communiqué</h4>
                             <form id="contact-slider-form" class="space-y-4">
                                 <div>
-                                    <label for="contact-message" class="block text-sm font-medium text-gray-700">Message à afficher</label>
+                                    <label for="contact-message" class="block text-sm font-medium text-gray-700">Message
+                                        à afficher</label>
                                     <textarea id="contact-message" rows="3" required
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Entrez le texte à faire défiler dans la bande de communiqué"></textarea>
@@ -710,9 +739,9 @@
                     </h3>
                     <p class="text-blue-200">Plateforme de contenu vidéo premium pour vos besoins médiatiques et
                         éducatifs.</p>
-                </div>                
+                </div>
 
-                
+
 
                 <div>
                     <h4 class="font-bold mb-4 text-lg">Contact</h4>
@@ -721,16 +750,16 @@
                         <p class="mb-2"><i class="fas fa-phone mr-2"></i> +242 06 504 2588</p>
                         <p class="mb-2"><i class="fas fa-envelope mr-2"></i> excellencemedianumerique@gmail.com</p>
                         <div class="flex space-x-4 mt-4">
-                            <a href="https://www.facebook.com/profile.php?id=61576697857842" class="text-2xl hover:text-yellow-400 transition"><i
-                                    class="fab fa-facebook"></i></a>                                                        
-                            <a href="https://youtube.com/@excellencemedianumerique?si=IQ-kd1LgkkipqUio" class="text-2xl hover:text-yellow-400 transition"><i
-                                    class="fab fa-youtube"></i></a>
+                            <a href="https://www.facebook.com/profile.php?id=61576697857842"
+                                class="text-2xl hover:text-yellow-400 transition"><i class="fab fa-facebook"></i></a>
+                            <a href="https://youtube.com/@excellencemedianumerique?si=IQ-kd1LgkkipqUio"
+                                class="text-2xl hover:text-yellow-400 transition"><i class="fab fa-youtube"></i></a>
                         </div>
                     </address>
                 </div>
             </div>
 
-            
+
         </div>
     </footer>
 
@@ -744,7 +773,8 @@
             'http://localhost',
             'http://localhost:5500',
             'http://127.0.0.1',
-            'http://127.0.0.1:5500'
+            'http://127.0.0.1:5500',
+            'https://emntv.github.io'
         ];
         const VIDEOS_PER_PAGE = 6;
         const MAX_PAGINATION_BUTTONS = 5; // Nombre maximum de boutons de pagination à afficher
@@ -875,7 +905,7 @@
         function logout() {
             // Réinitialiser l'utilisateur
             currentUser = null;
-            
+
             // Réinitialiser l'interface de connexion
             document.getElementById('login-container').innerHTML = `
                 <div id="g_id_onload"
@@ -887,14 +917,14 @@
                     data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
                 </div>
             `;
-            
+
             // Recharger le script Google Identity
             const script = document.createElement('script');
             script.src = 'https://accounts.google.com/gsi/client';
             script.async = true;
             script.defer = true;
             document.body.appendChild(script);
-            
+
             // Fermer le dashboard si ouvert
             closeDashboard();
         }
@@ -1013,7 +1043,7 @@
             } else {
                 // Images par défaut
                 slides = [
-                    
+
                 ];
                 saveSlides();
             }
@@ -1032,7 +1062,7 @@
         function renderPressArticles() {
             const pressScroll = document.getElementById('press-scroll');
             pressScroll.innerHTML = '';
-            
+
             document.getElementById('press-count').textContent = pressArticles.length;
 
             pressArticles.forEach((article, index) => {
@@ -1061,7 +1091,7 @@
             const updateScrollButtons = () => {
                 const showLeft = container.scrollLeft > 0;
                 const showRight = container.scrollLeft < container.scrollWidth - container.clientWidth;
-                
+
                 scrollLeftBtn.style.opacity = showLeft ? '1' : '0';
                 scrollRightBtn.style.opacity = showRight ? '1' : '0';
             };
@@ -1175,7 +1205,7 @@
                 const slideElement = document.createElement('div');
                 slideElement.className = `hero-slide ${index === 0 ? 'active' : ''}`;
                 slideElement.style.backgroundImage = `url('${slide.url}')`;
-                
+
                 const contentElement = document.createElement('div');
                 contentElement.className = 'hero-content';
                 contentElement.innerHTML = `
@@ -1187,7 +1217,7 @@
                     </div>
                 
                 `;
-                
+
                 slideElement.appendChild(contentElement);
                 heroSlideshow.appendChild(slideElement);
             });
@@ -1370,14 +1400,14 @@
             const paginationContainer = document.getElementById('video-pagination');
             const prevButton = document.getElementById('prev-video-page');
             const nextButton = document.getElementById('next-video-page');
-            
+
             // Supprimer tous les boutons de page existants (sauf prev et next)
             const existingPageButtons = document.querySelectorAll('.page-button');
             existingPageButtons.forEach(button => button.remove());
-            
+
             // Ajouter les boutons de page
             let startPage, endPage;
-            
+
             if (totalVideoPages <= MAX_PAGINATION_BUTTONS) {
                 // Moins de pages que le maximum affiché
                 startPage = 1;
@@ -1386,7 +1416,7 @@
                 // Plus de pages que le maximum affiché
                 const maxPagesBeforeCurrent = Math.floor(MAX_PAGINATION_BUTTONS / 2);
                 const maxPagesAfterCurrent = Math.ceil(MAX_PAGINATION_BUTTONS / 2) - 1;
-                
+
                 if (currentVideoPage <= maxPagesBeforeCurrent) {
                     // Page actuelle proche du début
                     startPage = 1;
@@ -1401,21 +1431,21 @@
                     endPage = currentVideoPage + maxPagesAfterCurrent;
                 }
             }
-            
+
             // Insérer les boutons de page avant le bouton "suivant"
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.className = `page-button px-4 py-2 border-t border-b border-gray-300 font-medium ${i === currentVideoPage ? 'pagination-active text-white bg-blue-900' : 'bg-white text-blue-900'}`;
                 pageButton.textContent = i;
                 pageButton.dataset.page = i;
-                
+
                 pageButton.addEventListener('click', () => {
                     changeVideoPage(i);
                 });
-                
+
                 nextButton.parentNode.insertBefore(pageButton, nextButton);
             }
-            
+
             // Mettre à jour l'état des boutons précédent/suivant
             prevButton.disabled = currentVideoPage === 1;
             nextButton.disabled = currentVideoPage === totalVideoPages;
@@ -1548,7 +1578,7 @@
             renderVideoList();
             renderSlideList();
             renderPressList();
-            
+
             // Pré-remplir le formulaire de contact
             document.getElementById('contact-message').value = contactMessage;
 
@@ -1556,7 +1586,7 @@
             initImageUpload();
 
             // Gestion des onglets
-            document.getElementById('videos-tab').addEventListener('click', function() {
+            document.getElementById('videos-tab').addEventListener('click', function () {
                 document.getElementById('videos-content').classList.remove('hidden');
                 document.getElementById('slides-content').classList.add('hidden');
                 document.getElementById('press-content').classList.add('hidden');
@@ -1571,7 +1601,7 @@
                 document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
             });
 
-            document.getElementById('slides-tab').addEventListener('click', function() {
+            document.getElementById('slides-tab').addEventListener('click', function () {
                 document.getElementById('slides-content').classList.remove('hidden');
                 document.getElementById('videos-content').classList.add('hidden');
                 document.getElementById('press-content').classList.add('hidden');
@@ -1585,8 +1615,8 @@
                 document.getElementById('contact-tab').classList.add('border-transparent', 'text-gray-500');
                 document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
             });
-            
-            document.getElementById('press-tab').addEventListener('click', function() {
+
+            document.getElementById('press-tab').addEventListener('click', function () {
                 document.getElementById('press-content').classList.remove('hidden');
                 document.getElementById('videos-content').classList.add('hidden');
                 document.getElementById('slides-content').classList.add('hidden');
@@ -1601,7 +1631,7 @@
                 document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
             });
 
-            document.getElementById('contact-tab').addEventListener('click', function() {
+            document.getElementById('contact-tab').addEventListener('click', function () {
                 document.getElementById('contact-content').classList.remove('hidden');
                 document.getElementById('videos-content').classList.add('hidden');
                 document.getElementById('slides-content').classList.add('hidden');
@@ -1672,9 +1702,9 @@
                 // Message de succès
                 alert('Image ajoutée au carrousel avec succès !');
             });
-            
+
             // Gestion du formulaire de presse
-            document.getElementById('add-press-form').addEventListener('submit', function(e) {
+            document.getElementById('add-press-form').addEventListener('submit', function (e) {
                 e.preventDefault();
 
                 const title = document.getElementById('press-title').value;
@@ -1708,19 +1738,19 @@
 
                 alert('Article ajouté avec succès !');
             });
-            
+
             // Gestion du formulaire de contact
-            document.getElementById('contact-slider-form').addEventListener('submit', function(e) {
+            document.getElementById('contact-slider-form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 contactMessage = document.getElementById('contact-message').value;
-                
+
                 saveContactMessage();
                 alert('Bande de communiqué mise à jour avec succès !');
             });
 
             // Gestion du bouton de déconnexion
-            document.getElementById('logout-btn').addEventListener('click', function(e) {
+            document.getElementById('logout-btn').addEventListener('click', function (e) {
                 e.preventDefault();
                 logout();
             });
@@ -1749,7 +1779,7 @@
             uploadContainer.addEventListener('drop', (e) => {
                 e.preventDefault();
                 uploadContainer.classList.remove('dragover');
-                
+
                 if (e.dataTransfer.files.length) {
                     fileInput.files = e.dataTransfer.files;
                     handleFileUpload(fileInput.files[0]);
@@ -1777,16 +1807,16 @@
                 }
 
                 const reader = new FileReader();
-                
-                reader.onload = function(e) {
+
+                reader.onload = function (e) {
                     preview.src = e.target.result;
                     preview.style.display = 'block';
                     uploadContainer.style.display = 'none';
-                    
+
                     // Stocker l'image uploadée
                     uploadedImage = e.target.result;
                 };
-                
+
                 reader.readAsDataURL(file);
             }
         }
