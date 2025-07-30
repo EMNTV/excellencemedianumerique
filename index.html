@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excellence Media Numérique - Plateforme Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        .hero-slideshow {
+            position: relative;
+            height: 500px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 2rem;
+            color: rgb(255, 255, 255);
+        }
+
+        .contact-slide {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: scrollText 30s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            transition: all 0.3s;
+        }
+
+        .video-item {
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .pagination-active {
+            background-color: #1e3a8a;
+            color: rgb(255, 255, 255);
+        }
+
+        .pagination-item {
+            transition: all 0.3s;
+        }
+
+        .pagination-item:hover:not(.pagination-active) {
+            background-color: #f3f4f6;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 0.5rem;
+            z-index: 0;
+        }
+
+        .background-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            background-size: cover;
+            background-position: center;
+            animation: slideshow 9s infinite;
+        }
+
+        .hero-slideshow {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        /* Styles pour la section Presse */
+        .press-container {
+            scrollbar-width: thin;
+            scrollbar-color: #1e3a8a #f3f4f6;
+        }
+
+        .press-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .press-container::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 3px;
+        }
+
+        .press-container::-webkit-scrollbar-thumb {
+            background-color: #1e3a8a;
+            border-radius: 3px;
+        }
+
+        .press-scroll {
+            min-width: max-content;
+        }
+
+        .press-item {
+            min-width: 200px;
+            max-width: 200px;
+            transition: transform 0.3s;
+        }
+
+        .press-item:hover {
+            transform: scale(1.05);
+        }
+
+        .press-item img {
+            height: 280px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        /* Styles pour le contact slider */
+        .contact-slider-container {
+            overflow: hidden;
+            position: relative;
+            background-color: #dd9103; /* Changé en orange */
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .contact-slider-content {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: scrollText 25s linear infinite;
+            font-size: 0.9rem;
+            color: white; /* Texte en blanc pour meilleur contraste */
+        }
+
+        .contact-slider-paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes slideshow {
+            0%,
+            33% {
+                background-image: url('https://source.unsplash.com/random/1920x1080/?media,studio');
+            }
+
+            34%,
+            66% {
+                background-image: url('https://source.unsplash.com/random/1920x1080/?video,production');
+            }
+
+            67%,
+            100% {
+                background-image: url('https://source.unsplash.com/random/1920x1080/?technology,camera');
+            }
+        }
+
+        /* Styles pour l'upload d'image */
+        .file-upload-container {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-container:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+
+        .file-upload-container.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .file-upload-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        /* Style pour le bouton de déconnexion */
+        .logout-btn {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .contact-slider-content {
+                animation: scrollText 15s linear infinite;
+                font-size: 0.8rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .location-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .hero-slideshow {
+                height: 200px;
+            }
+            
+            .dashboard-modal-content {
+                width: 95% !important;
+                margin: 1rem auto !important;
+            }
+            
+            .dashboard-tab-content {
+                padding: 1rem !important;
+            }
+
+            /* Styles responsive pour la presse */
+            .press-item {
+                min-width: 160px;
+                max-width: 160px;
+            }
+            
+            .press-item img {
+                height: 220px;
+            }
+            
+            .press-scroll-left,
+            .press-scroll-right {
+                display: none !important;
+            }
+
+            /* Ajustements pour le header en mobile */
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            /* Ajustements pour le dashboard en mobile */
+            .dashboard-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dashboard-tab {
+                display: inline-block;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <!-- Background Slideshow -->
+    <div class="background-slideshow"></div>
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4 header-content">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-play-circle text-3xl text-yellow-400"></i>
+                <h1 class="text-xl md:text-2xl font-bold">Excellence Media Numérique</h1>
+            </div>
+
+            <div id="login-container">
+                <div id="g_id_onload"
+                    data-client_id="110615064392-3gchkeu93jn0mm698h73ucc2da6tg674.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse" data-login_uri="http://localhost:5500"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline"
+                    data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contact Slider -->
+    <div class="contact-slider-container py-2">
+        <div id="contact-slider-content" class="contact-slider-content">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="hero-slideshow" id="hero-slideshow">
+            <!-- Les images seront chargées dynamiquement -->
+        </section>
+
+        <!-- Press Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Presse Écrite</h2>
+            <div class="mt-4 md:mt-0 text-sm text-gray-600">
+                <span id="press-count">0</span> articles disponibles
+            </div>
+        </div>
+
+        <div class="mb-8 relative">
+            <div class="press-container overflow-x-auto pb-4">
+                <div class="press-scroll flex space-x-4" id="press-scroll">
+                    <!-- Press items will be loaded here dynamically -->
+                </div>
+            </div>
+            <button class="press-scroll-left absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity" aria-label="Scroll left">
+                <i class="fas fa-chevron-left text-blue-900"></i>
+            </button>
+            <button class="press-scroll-right absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md opacity-0 transition-opacity" aria-label="Scroll right">
+                <i class="fas fa-chevron-right text-blue-900"></i>
+            </button>
+        </div>
+
+        <!-- Press Modal -->
+        <div id="press-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                </div>
+
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold text-blue-900" id="press-modal-title"></h3>
+                            <button id="close-press-modal" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                        <div class="mb-4">
+                            <img id="press-modal-image" src="" alt="" class="w-full h-auto rounded-lg">
+                        </div>
+                        <p class="text-gray-600" id="press-modal-description"></p>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="button" id="close-press-modal-bottom" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Nos Vidéos Récentes</h2>
+            <div class="mt-4 md:mt-0 text-sm text-gray-600">
+                <span id="video-count">0</span> vidéos disponibles
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <div class="relative max-w-xl">
+                <input type="text" id="search-input" placeholder="Rechercher des vidéos..."
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <button id="search-btn" class="absolute right-2 top-2 text-gray-500 hover:text-blue-900">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="video-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Les vidéos seront chargées ici dynamiquement -->
+        </div>
+
+        <!-- Pagination for Videos -->
+        <div class="flex justify-center mt-6 mb-12">
+            <nav class="inline-flex rounded-md shadow" id="video-pagination">
+                <button id="prev-video-page"
+                    class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-blue-900 font-medium hover:bg-gray-50 disabled:opacity-50">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <!-- Les boutons de pagination seront générés dynamiquement ici -->
+                <button id="next-video-page"
+                    class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-blue-900 font-medium hover:bg-gray-50 disabled:opacity-50">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Map Section -->
+        <h2 class="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Notre Localisation</h2>
+
+        <div class="bg-white p-4 rounded-lg shadow-md mb-12">
+            <div id="map"></div>
+            <div class="mt-4 text-center text-gray-600">
+                <i class="fas fa-map-marker-alt text-yellow-500 mr-2"></i>
+                <span></span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Dashboard Modal -->
+    <div id="dashboard-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl w-full dashboard-modal-content">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold text-blue-900">Tableau de bord</h3>
+                        <div class="flex items-center space-x-4">
+                            <button id="logout-btn" class="logout-btn text-sm">
+                                <i class="fas fa-sign-out-alt mr-1"></i> Déconnexion
+                            </button>
+                            <button id="close-dashboard" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Onglets -->
+                    <div class="border-b border-gray-200 mb-6 dashboard-tabs">
+                        <nav class="-mb-px flex space-x-8 overflow-x-auto">
+                            <button id="videos-tab" class="dashboard-tab border-b-2 border-blue-900 text-blue-900 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                                Vidéos
+                            </button>
+                            <button id="slides-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                                Carrousel
+                            </button>
+                            <button id="press-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                                Presse Écrite
+                            </button>
+                            <button id="contact-tab" class="dashboard-tab border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                                Bande de Communiqué
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Contenu des onglets -->
+                    <div id="videos-content" class="dashboard-content dashboard-tab-content">
+                        <!-- Formulaire d'ajout de vidéo -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+                            <h4 class="font-bold mb-4">Ajouter une nouvelle vidéo</h4>
+                            <form id="add-video-form" class="space-y-4">
+                                <div>
+                                    <label for="video-title" class="block text-sm font-medium text-gray-700">Titre de la
+                                        vidéo</label>
+                                    <input type="text" id="video-title" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="video-url" class="block text-sm font-medium text-gray-700">URL
+                                        YouTube</label>
+                                    <input type="url" id="video-url" required
+                                        placeholder="https://www.youtube.com/watch?v=..."
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <p class="mt-1 text-sm text-gray-500">Accepte les formats: youtu.be/,
+                                        youtube.com/watch?v=, youtube.com/embed/</p>
+                                </div>
+
+                                <div>
+                                    <label for="video-description"
+                                        class="block text-sm font-medium text-gray-700">Description</label>
+                                    <textarea id="video-description" rows="3"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Ajouter la vidéo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Liste des vidéos existantes -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold mb-4">Vidéos existantes</h4>
+                            <div id="video-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Les vidéos seront chargées ici -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="slides-content" class="dashboard-content dashboard-tab-content hidden">
+                        <!-- Formulaire d'ajout d'image au carrousel -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+                            <h4 class="font-bold mb-4">Ajouter une image au carrousel</h4>
+                            <form id="add-slide-form" class="space-y-4">
+                                <div>
+                                    <label for="slide-title" class="block text-sm font-medium text-gray-700">Titre (optionnel)</label>
+                                    <input type="text" id="slide-title"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="slide-url" class="block text-sm font-medium text-gray-700">URL de l'image</label>
+                                    <input type="url" id="slide-url" required
+                                        placeholder="https://example.com/image.jpg"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="slide-description"
+                                        class="block text-sm font-medium text-gray-700">Description (optionnel)</label>
+                                    <textarea id="slide-description" rows="3"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Ajouter l'image
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Liste des images du carrousel -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold mb-4">Images du carrousel</h4>
+                            <div id="slide-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Les images seront chargées ici -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="press-content" class="dashboard-content dashboard-tab-content hidden">
+                        <!-- Formulaire d'ajout d'article -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+                            <h4 class="font-bold mb-4">Ajouter un nouvel article</h4>
+                            <form id="add-press-form" class="space-y-4">
+                                <div>
+                                    <label for="press-title" class="block text-sm font-medium text-gray-700">Titre de l'article</label>
+                                    <input type="text" id="press-title" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Image de l'article</label>
+                                    <div class="mt-1">
+                                        <div class="file-upload-container" id="press-upload-container">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <i class="fas fa-cloud-upload-alt text-3xl text-blue-500 mb-2"></i>
+                                                <p class="text-sm text-gray-600">Glissez-déposez une image ou cliquez pour sélectionner</p>
+                                                <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, GIF</p>
+                                            </div>
+                                            <img id="press-upload-preview" class="file-upload-preview" src="" alt="Aperçu de l'image">
+                                            <input type="file" id="press-upload-input" class="file-upload-input" accept="image/*">
+                                        </div>
+                                        <div class="mt-2">
+                                            <label for="press-image-url" class="block text-sm font-medium text-gray-700">Ou entrer une URL d'image</label>
+                                            <input type="url" id="press-image-url"
+                                                placeholder="https://example.com/image.jpg"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="press-description"
+                                        class="block text-sm font-medium text-gray-700">Description</label>
+                                    <textarea id="press-description" rows="3" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Ajouter l'article
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Liste des articles existants -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold mb-4">Articles existants</h4>
+                            <div id="press-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Les articles seront chargés ici -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="contact-content" class="dashboard-content dashboard-tab-content hidden">
+                        <!-- Formulaire de modification du contact slider -->
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold mb-4">Modifier la Bande de Communiqué</h4>
+                            <form id="contact-slider-form" class="space-y-4">
+                                <div>
+                                    <label for="contact-message" class="block text-sm font-medium text-gray-700">Message à afficher</label>
+                                    <textarea id="contact-message" rows="3" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Entrez le texte à faire défiler dans la bande de communiqué"></textarea>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Enregistrer les modifications
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="close-dashboard-bottom"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top bg-blue-900 text-white p-3 rounded-full shadow-lg hover:bg-blue-800">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-10 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-play-circle text-yellow-400 mr-2"></i>
+                        Excellence Media
+                    </h3>
+                    <p class="text-blue-200">Plateforme de contenu vidéo premium pour vos besoins médiatiques et
+                        éducatifs.</p>
+                </div>                
+
+                
+
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Contact</h4>
+                    <address class="not-italic text-blue-200">
+                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-2"></i> </p>
+                        <p class="mb-2"><i class="fas fa-phone mr-2"></i> +242 06 504 2588</p>
+                        <p class="mb-2"><i class="fas fa-envelope mr-2"></i> excellencemedianumerique@gmail.com</p>
+                        <div class="flex space-x-4 mt-4">
+                            <a href="https://www.facebook.com/profile.php?id=61576697857842" class="text-2xl hover:text-yellow-400 transition"><i
+                                    class="fab fa-facebook"></i></a>                                                        
+                            <a href="https://youtube.com/@excellencemedianumerique?si=IQ-kd1LgkkipqUio" class="text-2xl hover:text-yellow-400 transition"><i
+                                    class="fab fa-youtube"></i></a>
+                        </div>
+                    </address>
+                </div>
+            </div>
+
+            
+        </div>
+    </footer>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+        // Configuration
+        const ALLOWED_EMAIL = "excellencemedianumerique@gmail.com";
+        const ALLOWED_ORIGINS = [
+            'http://localhost',
+            'http://localhost:5500',
+            'http://127.0.0.1',
+            'http://127.0.0.1:5500'
+        ];
+        const VIDEOS_PER_PAGE = 6;
+        const MAX_PAGINATION_BUTTONS = 5; // Nombre maximum de boutons de pagination à afficher
+
+        let currentUser = null;
+        let videos = [];
+        let slides = [];
+        let pressArticles = [
+            {
+                title: "Article sur les médias numériques",
+                imageUrl: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Un article approfondi sur l'évolution des médias numériques et leur impact sur la société moderne."
+            },
+            {
+                title: "Interview exclusive",
+                imageUrl: "https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Interview exclusive avec notre directeur artistique sur les tendances actuelles."
+            },
+            {
+                title: "Reportage spécial",
+                imageUrl: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Notre reportage spécial sur les coulisses de la production médiatique."
+            },
+            {
+                title: "Guide des meilleures pratiques",
+                imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Le guide ultime des meilleures pratiques en matière de production de contenu."
+            },
+            {
+                title: "Analyse de marché",
+                imageUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Analyse approfondie du marché des médias numériques en 2023."
+            },
+            {
+                title: "Tendances technologiques",
+                imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Les tendances technologiques qui façonnent l'industrie des médias."
+            },
+            {
+                title: "Success story",
+                imageUrl: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                description: "Comment nous avons aidé une entreprise à transformer sa présence en ligne."
+            }
+        ];
+        let contactMessage = "Excellence Media Numérique - Plateforme premium de contenu vidéo et médias. Contactez-nous pour plus d'informations.";
+        let currentVideoPage = 1;
+        let totalVideoPages = 1;
+        let paginationTimeout = null;
+        let map = null;
+        let userMarker = null;
+        let currentHeroSlide = 0;
+        let uploadedImage = null;
+
+        // Vérification de l'origine
+        function verifyOrigin() {
+            const currentOrigin = window.location.origin;
+            if (!ALLOWED_ORIGINS.includes(currentOrigin)) {
+                document.getElementById('login-container').innerHTML = `
+                    <div class="text-red-500 text-sm p-2 border border-red-300 rounded">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        Erreur : Veuillez utiliser une URL autorisée (localhost:5500)
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        // Gestion de la réponse d'authentification
+        function handleCredentialResponse(response) {
+            if (!verifyOrigin()) return;
+
+            try {
+                const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
+
+                console.log("Authentification réussie pour:", responsePayload.email);
+
+                if (responsePayload.email === ALLOWED_EMAIL) {
+                    currentUser = {
+                        name: responsePayload.name,
+                        email: responsePayload.email,
+                        picture: responsePayload.picture,
+                        loginTime: new Date()
+                    };
+
+                    showAdminUI();
+                } else {
+                    showAccessDenied();
+                }
+            } catch (error) {
+                console.error("Erreur d'authentification:", error);
+                showAuthError();
+            }
+        }
+
+        function showAdminUI() {
+            document.getElementById('login-container').innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <img src="${currentUser.picture}" alt="Profile" class="w-8 h-8 rounded-full">
+                    <button id="open-dashboard" class="bg-yellow-500 text-blue-900 px-3 py-1 rounded-lg text-sm font-medium hover:bg-yellow-600 transition">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="ml-1">Dashboard</span>
+                    </button>
+                </div>
+            `;
+            document.getElementById('open-dashboard').addEventListener('click', openDashboard);
+        }
+
+        function showAccessDenied() {
+            document.getElementById('login-container').innerHTML = `
+                <div class="text-red-500 text-sm p-2 border border-red-300 rounded">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    Accès refusé - Email non autorisé
+                </div>
+            `;
+        }
+
+        function showAuthError() {
+            document.getElementById('login-container').innerHTML = `
+                <div class="text-red-500 text-sm p-2 border border-red-300 rounded">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Erreur d'authentification
+                </div>
+            `;
+        }
+
+        // Fonction de déconnexion
+        function logout() {
+            // Réinitialiser l'utilisateur
+            currentUser = null;
+            
+            // Réinitialiser l'interface de connexion
+            document.getElementById('login-container').innerHTML = `
+                <div id="g_id_onload"
+                    data-client_id="110615064392-3gchkeu93jn0mm698h73ucc2da6tg674.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse" data-login_uri="http://localhost:5500"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline"
+                    data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
+                </div>
+            `;
+            
+            // Recharger le script Google Identity
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            document.body.appendChild(script);
+            
+            // Fermer le dashboard si ouvert
+            closeDashboard();
+        }
+
+        // Fonction de conversion des URLs YouTube
+        function convertYoutubeUrl(url) {
+            // Nettoyage de l'URL
+            url = url.trim();
+
+            // Cas 1: Lien embed déjà formaté
+            if (url.includes('youtube.com/embed/')) {
+                return url.split('?')[0]; // On enlève les paramètres
+            }
+
+            // Cas 2: Lien youtu.be/ (court)
+            if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1].split(/[?&]/)[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            // Cas 3: Lien standard watch?v=
+            if (url.includes('v=')) {
+                const videoId = url.split('v=')[1].split(/[?&]/)[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            // Cas 4: Lien de partage (youtube.com/share?video_id=...)
+            if (url.includes('youtube.com/share') && url.includes('video_id=')) {
+                const videoId = url.split('video_id=')[1].split(/[?&]/)[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            return url; // Si aucun format reconnu
+        }
+
+        // Fonctions pour gérer les vidéos
+        function loadVideos() {
+            const savedVideos = localStorage.getItem('excellenceMediaVideos');
+            if (savedVideos) {
+                videos = JSON.parse(savedVideos);
+            } else {
+                // Vidéos par défaut
+                videos = [
+                    {
+                        title: "Tutoriel de montage vidéo",
+                        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                        description: "Apprenez les bases du montage vidéo avec ce tutoriel complet."
+                    },
+                    {
+                        title: "Interview avec un expert",
+                        url: "https://www.youtube.com/embed/9bZkp7q19f0",
+                        description: "Découvrez les insights d'un expert en média numérique."
+                    },
+                    {
+                        title: "Documentaire sur les médias",
+                        url: "https://www.youtube.com/embed/J---aiyznGQ",
+                        description: "Un regard approfondi sur l'industrie des médias modernes."
+                    },
+                    {
+                        title: "Atelier de photographie",
+                        url: "https://www.youtube.com/embed/oHg5SJYRHA0",
+                        description: "Techniques avancées de photographie numérique."
+                    },
+                    {
+                        title: "Conférence sur le journalisme",
+                        url: "https://www.youtube.com/embed/6_b7RDuLwcI",
+                        description: "Le futur du journalisme à l'ère numérique."
+                    },
+                    {
+                        title: "Guide du streaming",
+                        url: "https://www.youtube.com/embed/L_jWHffIx5E",
+                        description: "Comment démarrer avec le streaming vidéo."
+                    },
+                    {
+                        title: "Analyse des réseaux sociaux",
+                        url: "https://www.youtube.com/embed/ub82Xb1C8os",
+                        description: "Impact des réseaux sociaux sur les médias."
+                    },
+                    {
+                        title: "Techniques d'interview",
+                        url: "https://www.youtube.com/embed/d-diB65scQU",
+                        description: "Comment mener des interviews percutantes."
+                    },
+                    {
+                        title: "Édition audio professionnelle",
+                        url: "https://www.youtube.com/embed/jofNR_WkoCE",
+                        description: "Maîtrisez les outils d'édition audio."
+                    },
+                    {
+                        title: "Effets visuels pour débutants",
+                        url: "https://www.youtube.com/embed/8UVNT4wvIGY",
+                        description: "Introduction aux effets visuels dans les vidéos."
+                    },
+                    {
+                        title: "Storytelling numérique",
+                        url: "https://www.youtube.com/embed/9P6rdqiybaw",
+                        description: "L'art de raconter des histoires à l'ère numérique."
+                    },
+                    {
+                        title: "SEO pour les vidéos",
+                        url: "https://www.youtube.com/embed/PXwM4jeG-1o",
+                        description: "Optimisez vos vidéos pour les moteurs de recherche."
+                    }
+                ];
+                saveVideos();
+            }
+            updateVideoCount();
+            calculateVideoPages();
+        }
+
+        // Fonctions pour gérer le carrousel
+        function loadSlides() {
+            const savedSlides = localStorage.getItem('excellenceMediaSlides');
+            if (savedSlides) {
+                slides = JSON.parse(savedSlides);
+            } else {
+                // Images par défaut
+                slides = [
+                    
+                ];
+                saveSlides();
+            }
+            renderSlides();
+        }
+
+        // Fonctions pour gérer la presse
+        function loadPressArticles() {
+            const savedPress = localStorage.getItem('excellenceMediaPress');
+            if (savedPress) {
+                pressArticles = JSON.parse(savedPress);
+            }
+            renderPressArticles();
+        }
+
+        function renderPressArticles() {
+            const pressScroll = document.getElementById('press-scroll');
+            pressScroll.innerHTML = '';
+            
+            document.getElementById('press-count').textContent = pressArticles.length;
+
+            pressArticles.forEach((article, index) => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'press-item bg-white rounded-lg shadow-md cursor-pointer';
+                articleElement.innerHTML = `
+                    <img src="${article.imageUrl}" alt="${article.title}" class="w-full mb-2">
+                    <div class="p-2">
+                        <h4 class="font-medium text-sm text-gray-800 truncate">${article.title}</h4>
+                    </div>
+                `;
+                articleElement.addEventListener('click', () => openPressModal(index));
+                pressScroll.appendChild(articleElement);
+            });
+
+            // Initialiser le scroll horizontal
+            initPressScroll();
+        }
+
+        function initPressScroll() {
+            const container = document.querySelector('.press-container');
+            const scrollLeftBtn = document.querySelector('.press-scroll-left');
+            const scrollRightBtn = document.querySelector('.press-scroll-right');
+
+            // Afficher/masquer les boutons de scroll
+            const updateScrollButtons = () => {
+                const showLeft = container.scrollLeft > 0;
+                const showRight = container.scrollLeft < container.scrollWidth - container.clientWidth;
+                
+                scrollLeftBtn.style.opacity = showLeft ? '1' : '0';
+                scrollRightBtn.style.opacity = showRight ? '1' : '0';
+            };
+
+            container.addEventListener('scroll', updateScrollButtons);
+            window.addEventListener('resize', updateScrollButtons);
+
+            // Bouton gauche
+            scrollLeftBtn.addEventListener('click', () => {
+                container.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+
+            // Bouton droit
+            scrollRightBtn.addEventListener('click', () => {
+                container.scrollBy({ left: 200, behavior: 'smooth' });
+            });
+
+            // Hover sur le container
+            container.addEventListener('mouseenter', () => {
+                updateScrollButtons();
+            });
+
+            container.addEventListener('mouseleave', () => {
+                scrollLeftBtn.style.opacity = '0';
+                scrollRightBtn.style.opacity = '0';
+            });
+
+            updateScrollButtons();
+        }
+
+        function openPressModal(index) {
+            const article = pressArticles[index];
+            document.getElementById('press-modal-title').textContent = article.title;
+            document.getElementById('press-modal-image').src = article.imageUrl;
+            document.getElementById('press-modal-image').alt = article.title;
+            document.getElementById('press-modal-description').textContent = article.description;
+            document.getElementById('press-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closePressModal() {
+            document.getElementById('press-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        function savePressArticles() {
+            localStorage.setItem('excellenceMediaPress', JSON.stringify(pressArticles));
+            renderPressArticles();
+        }
+
+        function renderPressList() {
+            const pressList = document.getElementById('press-list');
+            pressList.innerHTML = '';
+
+            pressArticles.forEach((article, index) => {
+                const articleElement = `
+                    <div class="border rounded-lg p-3">
+                        <div class="font-medium">${article.title}</div>
+                        <div class="text-sm text-gray-500 truncate">${article.description}</div>
+                        <div class="flex justify-end mt-2">
+                            <button onclick="deletePressArticle(${index})" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `;
+                pressList.insertAdjacentHTML('beforeend', articleElement);
+            });
+        }
+
+        function deletePressArticle(index) {
+            if (confirm("Voulez-vous vraiment supprimer cet article ?")) {
+                pressArticles.splice(index, 1);
+                savePressArticles();
+                renderPressList();
+                renderPressArticles();
+            }
+        }
+
+        // Fonctions pour gérer la bande de communiqué
+        function loadContactMessage() {
+            const savedMessage = localStorage.getItem('excellenceMediaContactMessage');
+            if (savedMessage) {
+                contactMessage = savedMessage;
+            }
+            renderContactSlider();
+        }
+
+        function saveContactMessage() {
+            localStorage.setItem('excellenceMediaContactMessage', contactMessage);
+            renderContactSlider();
+        }
+
+        function renderContactSlider() {
+            const contactSlider = document.getElementById('contact-slider-content');
+            contactSlider.innerHTML = `
+                <span class="px-4">${contactMessage}</span>
+            `;
+        }
+
+        function saveSlides() {
+            localStorage.setItem('excellenceMediaSlides', JSON.stringify(slides));
+            renderSlides();
+        }
+
+        function renderSlides() {
+            const heroSlideshow = document.getElementById('hero-slideshow');
+            heroSlideshow.innerHTML = '';
+
+            slides.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+                slideElement.style.backgroundImage = `url('${slide.url}')`;
+                
+                const contentElement = document.createElement('div');
+                contentElement.className = 'hero-content';
+                contentElement.innerHTML = `
+                    <div class="flex items-center space-x-4">                        
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-bold mb-1">${slide.title || ''}</h1>
+                            <p class="text-lg text-blue-200">${slide.description || ''}</p>
+                        </div>
+                    </div>
+                
+                `;
+                
+                slideElement.appendChild(contentElement);
+                heroSlideshow.appendChild(slideElement);
+            });
+
+            initHeroSlideshow();
+        }
+
+        function renderSlideList() {
+            const slideList = document.getElementById('slide-list');
+            slideList.innerHTML = '';
+
+            slides.forEach((slide, index) => {
+                const slideElement = `
+                    <div class="border rounded-lg overflow-hidden">
+                        <div class="h-40 bg-cover bg-center" style="background-image: url('${slide.url}')"></div>
+                        <div class="p-3">
+                            <div class="font-medium truncate">${slide.title || 'Sans titre'}</div>
+                            <div class="text-sm text-gray-500 truncate">${slide.description || 'Aucune description'}</div>
+                            <div class="flex justify-end mt-2">
+                                <button onclick="deleteSlide(${index})" class="text-red-600 hover:text-red-800 text-sm">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                slideList.insertAdjacentHTML('beforeend', slideElement);
+            });
+        }
+
+        function deleteSlide(index) {
+            if (confirm("Voulez-vous vraiment supprimer cette image du carrousel ?")) {
+                slides.splice(index, 1);
+                saveSlides();
+                renderSlideList();
+            }
+        }
+
+        function saveVideos() {
+            localStorage.setItem('excellenceMediaVideos', JSON.stringify(videos));
+            updateVideoCount();
+            calculateVideoPages();
+        }
+
+        function updateVideoCount() {
+            document.getElementById('video-count').textContent = videos.length;
+        }
+
+        function calculateVideoPages() {
+            totalVideoPages = Math.ceil(videos.length / VIDEOS_PER_PAGE);
+            if (totalVideoPages === 0) totalVideoPages = 1;
+            renderPagination();
+        }
+
+        function getPaginatedVideos(page = 1) {
+            const start = (page - 1) * VIDEOS_PER_PAGE;
+            const end = start + VIDEOS_PER_PAGE;
+            return videos.slice(start, end);
+        }
+
+        function renderVideos(page = 1) {
+            const videoGrid = document.querySelector('.video-grid');
+            videoGrid.innerHTML = '';
+
+            const videosToShow = getPaginatedVideos(page);
+
+            if (videosToShow.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="col-span-full text-center py-10">
+                        <i class="fas fa-video-slash text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">Aucune vidéo disponible</p>
+                    </div>
+                `;
+                return;
+            }
+
+            videosToShow.forEach(video => {
+                const videoElement = `
+                    <div class="video-item bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                        <div class="relative pb-[56.25%]">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="${video.url}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-lg">${video.title}</h3>
+                                <span class="text-sm text-gray-500"><i class="fas fa-eye mr-1"></i> ${Math.floor(Math.random() * 10000).toLocaleString()}</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">${video.description}</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-500"><i class="far fa-clock mr-1"></i> ${Math.floor(Math.random() * 20) + 5}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}</span>
+                                <span class="text-gray-500">Publié: ${new Date().toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                videoGrid.insertAdjacentHTML('beforeend', videoElement);
+            });
+        }
+
+        function renderVideoList() {
+            const videoList = document.getElementById('video-list');
+            videoList.innerHTML = '';
+
+            videos.forEach((video, index) => {
+                const videoElement = `
+                    <div class="border rounded-lg p-3">
+                        <div class="font-medium">${video.title}</div>
+                        <div class="text-sm text-gray-500 truncate">${video.description}</div>
+                        <div class="flex justify-end mt-2">
+                            <button onclick="deleteVideo(${index})" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `;
+                videoList.insertAdjacentHTML('beforeend', videoElement);
+            });
+        }
+
+        function deleteVideo(index) {
+            if (confirm("Voulez-vous vraiment supprimer cette vidéo ?")) {
+                videos.splice(index, 1);
+                saveVideos();
+                renderVideos(currentVideoPage);
+                renderVideoList();
+                updateVideoPagination();
+            }
+        }
+
+        function searchVideos(query) {
+            if (!query.trim()) {
+                renderVideos(currentVideoPage);
+                updateVideoPagination();
+                return;
+            }
+
+            const filteredVideos = videos.filter(video =>
+                video.title.toLowerCase().includes(query.toLowerCase()) ||
+                video.description.toLowerCase().includes(query.toLowerCase())
+            );
+
+            const videoGrid = document.querySelector('.video-grid');
+            videoGrid.innerHTML = '';
+
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="col-span-full text-center py-10">
+                        <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">Aucun résultat trouvé pour "${query}"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredVideos.forEach(video => {
+                const videoElement = `
+                    <div class="video-item bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                        <div class="relative pb-[56.25%]">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="${video.url}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-lg">${video.title}</h3>
+                                <span class="text-sm text-gray-500"><i class="fas fa-eye mr-1"></i> ${Math.floor(Math.random() * 10000).toLocaleString()}</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">${video.description}</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-500"><i class="far fa-clock mr-1"></i> ${Math.floor(Math.random() * 20) + 5}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}</span>
+                                <span class="text-gray-500">Publié: ${new Date().toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                videoGrid.insertAdjacentHTML('beforeend', videoElement);
+            });
+        }
+
+        // Gestion de la pagination des vidéos
+        function renderPagination() {
+            const paginationContainer = document.getElementById('video-pagination');
+            const prevButton = document.getElementById('prev-video-page');
+            const nextButton = document.getElementById('next-video-page');
+            
+            // Supprimer tous les boutons de page existants (sauf prev et next)
+            const existingPageButtons = document.querySelectorAll('.page-button');
+            existingPageButtons.forEach(button => button.remove());
+            
+            // Ajouter les boutons de page
+            let startPage, endPage;
+            
+            if (totalVideoPages <= MAX_PAGINATION_BUTTONS) {
+                // Moins de pages que le maximum affiché
+                startPage = 1;
+                endPage = totalVideoPages;
+            } else {
+                // Plus de pages que le maximum affiché
+                const maxPagesBeforeCurrent = Math.floor(MAX_PAGINATION_BUTTONS / 2);
+                const maxPagesAfterCurrent = Math.ceil(MAX_PAGINATION_BUTTONS / 2) - 1;
+                
+                if (currentVideoPage <= maxPagesBeforeCurrent) {
+                    // Page actuelle proche du début
+                    startPage = 1;
+                    endPage = MAX_PAGINATION_BUTTONS;
+                } else if (currentVideoPage + maxPagesAfterCurrent >= totalVideoPages) {
+                    // Page actuelle proche de la fin
+                    startPage = totalVideoPages - MAX_PAGINATION_BUTTONS + 1;
+                    endPage = totalVideoPages;
+                } else {
+                    // Page actuelle au milieu
+                    startPage = currentVideoPage - maxPagesBeforeCurrent;
+                    endPage = currentVideoPage + maxPagesAfterCurrent;
+                }
+            }
+            
+            // Insérer les boutons de page avant le bouton "suivant"
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-button px-4 py-2 border-t border-b border-gray-300 font-medium ${i === currentVideoPage ? 'pagination-active text-white bg-blue-900' : 'bg-white text-blue-900'}`;
+                pageButton.textContent = i;
+                pageButton.dataset.page = i;
+                
+                pageButton.addEventListener('click', () => {
+                    changeVideoPage(i);
+                });
+                
+                nextButton.parentNode.insertBefore(pageButton, nextButton);
+            }
+            
+            // Mettre à jour l'état des boutons précédent/suivant
+            prevButton.disabled = currentVideoPage === 1;
+            nextButton.disabled = currentVideoPage === totalVideoPages;
+        }
+
+        function updateVideoPagination() {
+            calculateVideoPages(); // Recalculer le nombre total de pages
+            renderPagination(); // Re-rendre la pagination
+        }
+
+        function changeVideoPage(newPage) {
+            if (newPage < 1 || newPage > totalVideoPages) return;
+
+            currentVideoPage = newPage;
+            renderVideos(currentVideoPage);
+            renderPagination();
+
+            // Animation de transition entre les pages
+            const videoGrid = document.querySelector('.video-grid');
+            videoGrid.style.opacity = '0';
+
+            setTimeout(() => {
+                videoGrid.style.transition = 'opacity 0.3s ease';
+                videoGrid.style.opacity = '1';
+            }, 50);
+        }
+
+        // Initialisation de la carte
+        function initMap() {
+            // Coordonnées de Paris (notre adresse fictive)
+            const parisCoords = [48.8566, 2.3522];
+
+            // Créer la carte centrée sur Paris
+            map = L.map('map').setView(parisCoords, 13);
+
+            // Ajouter les tuiles OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Ajouter un marqueur pour notre localisation
+            L.marker(parisCoords)
+                .addTo(map)
+                .bindPopup('Excellence Media Numérique<br>')
+                .openPopup();
+        }
+
+        // Gestion du diaporama hero
+        function initHeroSlideshow() {
+            const slides = document.querySelectorAll('.hero-slide');
+
+            setInterval(() => {
+                slides[currentHeroSlide].classList.remove('active');
+                currentHeroSlide = (currentHeroSlide + 1) % slides.length;
+                slides[currentHeroSlide].classList.add('active');
+            }, 3000);
+        }
+
+        // Gestion de la géolocalisation
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    showError,
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            } else {
+                document.getElementById('gps-status').textContent = "GPS non supporté";
+                document.getElementById('user-location').textContent = "Localisation non disponible";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            document.getElementById('gps-status').textContent = "Localisé";
+            document.getElementById('user-location').textContent = `Lat: ${latitude.toFixed(4)}, Long: ${longitude.toFixed(4)}`;
+
+            // Mettre à jour la carte avec la position de l'utilisateur
+            if (map) {
+                // Supprimer l'ancien marqueur s'il existe
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+
+                // Ajouter un nouveau marqueur pour la position de l'utilisateur
+                userMarker = L.marker([latitude, longitude], {
+                    icon: L.divIcon({
+                        className: 'user-location-marker',
+                        html: '<i class="fas fa-user text-blue-900 text-xl"></i>',
+                        iconSize: [24, 24]
+                    })
+                }).addTo(map)
+                    .bindPopup('Votre position');
+
+                // Ajuster la vue pour voir les deux marqueurs
+                const bounds = L.latLngBounds(
+                    [latitude, longitude],
+                    [48.8566, 2.3522] // Paris coords
+                );
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function showError(error) {
+            let message = "Erreur de localisation";
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "Localisation refusée par l'utilisateur";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "Information de localisation indisponible";
+                    break;
+                case error.TIMEOUT:
+                    message = "La requête de localisation a expiré";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    message = "Une erreur inconnue est survenue";
+                    break;
+            }
+            document.getElementById('gps-status').textContent = message;
+            document.getElementById('user-location').textContent = "Localisation non disponible";
+        }
+
+        // Gestion du dashboard
+        function openDashboard() {
+            document.getElementById('dashboard-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            renderVideoList();
+            renderSlideList();
+            renderPressList();
+            
+            // Pré-remplir le formulaire de contact
+            document.getElementById('contact-message').value = contactMessage;
+
+            // Initialiser l'upload d'image
+            initImageUpload();
+
+            // Gestion des onglets
+            document.getElementById('videos-tab').addEventListener('click', function() {
+                document.getElementById('videos-content').classList.remove('hidden');
+                document.getElementById('slides-content').classList.add('hidden');
+                document.getElementById('press-content').classList.add('hidden');
+                document.getElementById('contact-content').classList.add('hidden');
+                this.classList.add('border-blue-900', 'text-blue-900');
+                this.classList.remove('border-transparent', 'text-gray-500');
+                document.getElementById('slides-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('slides-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('press-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('press-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('contact-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
+            });
+
+            document.getElementById('slides-tab').addEventListener('click', function() {
+                document.getElementById('slides-content').classList.remove('hidden');
+                document.getElementById('videos-content').classList.add('hidden');
+                document.getElementById('press-content').classList.add('hidden');
+                document.getElementById('contact-content').classList.add('hidden');
+                this.classList.add('border-blue-900', 'text-blue-900');
+                this.classList.remove('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('press-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('press-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('contact-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
+            });
+            
+            document.getElementById('press-tab').addEventListener('click', function() {
+                document.getElementById('press-content').classList.remove('hidden');
+                document.getElementById('videos-content').classList.add('hidden');
+                document.getElementById('slides-content').classList.add('hidden');
+                document.getElementById('contact-content').classList.add('hidden');
+                this.classList.add('border-blue-900', 'text-blue-900');
+                this.classList.remove('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('slides-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('slides-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('contact-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('contact-tab').classList.remove('border-blue-900', 'text-blue-900');
+            });
+
+            document.getElementById('contact-tab').addEventListener('click', function() {
+                document.getElementById('contact-content').classList.remove('hidden');
+                document.getElementById('videos-content').classList.add('hidden');
+                document.getElementById('slides-content').classList.add('hidden');
+                document.getElementById('press-content').classList.add('hidden');
+                this.classList.add('border-blue-900', 'text-blue-900');
+                this.classList.remove('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('videos-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('slides-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('slides-tab').classList.remove('border-blue-900', 'text-blue-900');
+                document.getElementById('press-tab').classList.add('border-transparent', 'text-gray-500');
+                document.getElementById('press-tab').classList.remove('border-blue-900', 'text-blue-900');
+            });
+
+            // Gestion du formulaire vidéo
+            document.getElementById('add-video-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const title = document.getElementById('video-title').value;
+                let url = document.getElementById('video-url').value;
+                const description = document.getElementById('video-description').value;
+
+                // Convertir l'URL YouTube
+                url = convertYoutubeUrl(url);
+
+                // Ajouter la nouvelle vidéo
+                videos.unshift({
+                    title,
+                    url,
+                    description
+                });
+
+                // Sauvegarder et actualiser
+                saveVideos();
+                renderVideos(currentVideoPage);
+                renderVideoList();
+                updateVideoPagination();
+
+                // Réinitialiser le formulaire
+                this.reset();
+
+                // Message de succès
+                alert('Vidéo ajoutée avec succès !');
+            });
+
+            // Gestion du formulaire d'images
+            document.getElementById('add-slide-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const title = document.getElementById('slide-title').value;
+                const url = document.getElementById('slide-url').value;
+                const description = document.getElementById('slide-description').value;
+
+                // Ajouter la nouvelle image
+                slides.unshift({
+                    title,
+                    url,
+                    description
+                });
+
+                // Sauvegarder et actualiser
+                saveSlides();
+                renderSlideList();
+
+                // Réinitialiser le formulaire
+                this.reset();
+
+                // Message de succès
+                alert('Image ajoutée au carrousel avec succès !');
+            });
+            
+            // Gestion du formulaire de presse
+            document.getElementById('add-press-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const title = document.getElementById('press-title').value;
+                const imageUrl = document.getElementById('press-image-url').value;
+                const description = document.getElementById('press-description').value;
+
+                // Utiliser l'image uploadée si elle existe
+                const finalImageUrl = uploadedImage || imageUrl;
+
+                if (!finalImageUrl) {
+                    alert('Veuillez ajouter une image (upload ou URL)');
+                    return;
+                }
+
+                pressArticles.unshift({
+                    title,
+                    imageUrl: finalImageUrl,
+                    description
+                });
+
+                savePressArticles();
+                renderPressArticles();
+                renderPressList();
+
+                this.reset();
+                // Réinitialiser l'upload
+                document.getElementById('press-upload-preview').style.display = 'none';
+                document.getElementById('press-upload-preview').src = '';
+                uploadedImage = null;
+                document.getElementById('press-upload-container').style.display = 'block';
+
+                alert('Article ajouté avec succès !');
+            });
+            
+            // Gestion du formulaire de contact
+            document.getElementById('contact-slider-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                contactMessage = document.getElementById('contact-message').value;
+                
+                saveContactMessage();
+                alert('Bande de communiqué mise à jour avec succès !');
+            });
+
+            // Gestion du bouton de déconnexion
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+        }
+
+        function initImageUpload() {
+            const uploadContainer = document.getElementById('press-upload-container');
+            const fileInput = document.getElementById('press-upload-input');
+            const preview = document.getElementById('press-upload-preview');
+
+            // Gestion du clic
+            uploadContainer.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Gestion du drag and drop
+            uploadContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+
+            uploadContainer.addEventListener('dragleave', () => {
+                uploadContainer.classList.remove('dragover');
+            });
+
+            uploadContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload(fileInput.files[0]);
+                }
+            });
+
+            // Gestion de la sélection de fichier
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+
+            function handleFileUpload(file) {
+                // Vérifier le type de fichier
+                if (!file.type.match('image.*')) {
+                    alert('Veuillez sélectionner un fichier image valide (JPG, PNG, GIF)');
+                    return;
+                }
+
+                // Vérifier la taille du fichier (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('La taille du fichier ne doit pas dépasser 5MB');
+                    return;
+                }
+
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    uploadContainer.style.display = 'none';
+                    
+                    // Stocker l'image uploadée
+                    uploadedImage = e.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function closeDashboard() {
+            document.getElementById('dashboard-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Initialisation de la page
+        document.addEventListener('DOMContentLoaded', function () {
+            // Charger les données depuis le localStorage
+            loadVideos();
+            loadSlides();
+            loadPressArticles();
+            loadContactMessage();
+
+            // Afficher les vidéos
+            renderVideos(currentVideoPage);
+            renderPagination();
+
+            // Initialiser la carte
+            initMap();
+
+            // Gestion de la recherche
+            document.getElementById('search-btn').addEventListener('click', function () {
+                const query = document.getElementById('search-input').value;
+                searchVideos(query);
+            });
+
+            document.getElementById('search-input').addEventListener('keyup', function (e) {
+                if (e.key === 'Enter') {
+                    const query = this.value;
+                    searchVideos(query);
+                }
+            });
+
+            // Gestion de la pagination des vidéos
+            document.getElementById('prev-video-page').addEventListener('click', function () {
+                changeVideoPage(currentVideoPage - 1);
+            });
+
+            document.getElementById('next-video-page').addEventListener('click', function () {
+                changeVideoPage(currentVideoPage + 1);
+            });
+
+            // Gestion du retour en haut
+            window.addEventListener('scroll', function () {
+                const backToTop = document.querySelector('.back-to-top');
+                backToTop.style.display = window.pageYOffset > 300 ? 'block' : 'none';
+            });
+
+            document.querySelector('.back-to-top').addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Gestion du dashboard
+            document.getElementById('close-dashboard').addEventListener('click', closeDashboard);
+            document.getElementById('close-dashboard-bottom').addEventListener('click', closeDashboard);
+
+            // Gestion du modal presse
+            document.getElementById('close-press-modal').addEventListener('click', closePressModal);
+            document.getElementById('close-press-modal-bottom').addEventListener('click', closePressModal);
+
+            // Activer la géolocalisation
+            getLocation();
+        });
+
+        // Exposer les fonctions nécessaires au scope global
+        window.deleteVideo = deleteVideo;
+        window.deleteSlide = deleteSlide;
+        window.deletePressArticle = deletePressArticle;
+    </script>
+</body>
+
+</html>
