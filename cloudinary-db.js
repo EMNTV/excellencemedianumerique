@@ -1,11 +1,11 @@
-// cloudinary-db.js - STOCKAGE CLOUDINARY MULTI-NAVIGATEURS ✅
+// cloudinary-db.js - STOCKAGE CLOUDINARY PARTAGÉ ✅
 const CloudinaryDB = {
     cloudName: 'dv36bmp5e',
-    uploadPreset: 'excellence_media', // Votre preset
+    uploadPreset: 'excellence_media',
     storageKey: 'excellence_media_data',
     
     async saveData(data) {
-        console.log('☁️ Sauvegarde sur Cloudinary...');
+        console.log('☁️ Sauvegarde CLOUDINARY...');
         
         try {
             // 1. Convertir en JSON
@@ -13,12 +13,13 @@ const CloudinaryDB = {
             const blob = new Blob([jsonString], { type: 'application/json' });
             const file = new File([blob], 'data.json', { type: 'application/json' });
             
-            // 2. Upload vers Cloudinary
+            // 2. Upload VERS CLOUDINARY (pas localStorage)
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', this.uploadPreset);
             formData.append('cloud_name', this.cloudName);
             formData.append('public_id', this.storageKey);
+            formData.append('folder', 'excellence_data');
             
             const response = await fetch(
                 `https://api.cloudinary.com/v1_1/${this.cloudName}/raw/upload`,
@@ -28,13 +29,15 @@ const CloudinaryDB = {
             const result = await response.json();
             
             if (response.ok && result.secure_url) {
-                console.log('✅ Sauvegardé sur Cloudinary:', result.secure_url);
+                console.log('✅ SAUVEGARDE CLOUDINARY RÉUSSIE !');
+                console.log('🌍 URL publique:', result.secure_url);
                 
-                // Sauvegarde locale en CACHE seulement
-                localStorage.setItem('cloudinary_cache', jsonString);
-                localStorage.setItem('cloudinary_url', result.secure_url);
-                
-                return { success: true, cloudinary: true };
+                // 🔥 TOUT LE MONDE pourra voir ces données
+                return { 
+                    success: true, 
+                    cloudinary: true,
+                    url: result.secure_url 
+                };
             }
             
             throw new Error(result.error?.message || 'Erreur upload');
@@ -42,34 +45,46 @@ const CloudinaryDB = {
         } catch (error) {
             console.error('❌ Erreur Cloudinary:', error);
             
-            // FALLBACK : sauvegarde locale seulement
-            localStorage.setItem('cloudinary_cache', JSON.stringify(data));
-            return { success: true, cloudinary: false, local: true };
+            // Fallback LOCAL (seulement pour vous)
+            localStorage.setItem('local_backup', JSON.stringify(data));
+            return { 
+                success: false, 
+                cloudinary: false, 
+                local: true,
+                error: error.message 
+            };
         }
     },
     
     async loadData() {
-        console.log('☁️ Chargement depuis Cloudinary...');
+        console.log('☁️ Chargement DEPUIS CLOUDINARY...');
         
         try {
-            // 1. ESSAYER DE CHARGER DEPUIS CLOUDINARY
-            const url = `https://res.cloudinary.com/${this.cloudName}/raw/upload/v1/${this.storageKey}.json`;
+            // 1. TOUJOURS charger depuis Cloudinary d'abord
+            const url = `https://res.cloudinary.com/${this.cloudName}/raw/upload/v1/excellence_data/${this.storageKey}.json`;
+            
+            console.log('📡 Tentative chargement:', url);
             const response = await fetch(url + '?t=' + Date.now());
             
             if (response.ok) {
                 const data = await response.json();
-                console.log('✅ Chargé depuis Cloudinary');
+                console.log('✅ CHARGEMENT CLOUDINARY RÉUSSI !');
+                console.log('📊 Données:', Object.keys(data));
                 
-                // Mettre en cache
+                // Cache local (optionnel)
                 localStorage.setItem('cloudinary_cache', JSON.stringify(data));
                 
-                return { success: true, data, source: 'cloudinary' };
+                return { 
+                    success: true, 
+                    data, 
+                    source: 'cloudinary' 
+                };
             }
             
-            // 2. FALLBACK : cache local
+            // 2. FALLBACK : cache local (vos anciennes données)
             const cache = localStorage.getItem('cloudinary_cache');
             if (cache) {
-                console.log('📦 Chargé depuis cache local');
+                console.log('⚠️ Utilisation du cache local');
                 return { 
                     success: true, 
                     data: JSON.parse(cache), 
@@ -77,45 +92,52 @@ const CloudinaryDB = {
                 };
             }
             
-            // 3. DONNÉES PAR DÉFAUT
-            console.log('📁 Création données par défaut');
+            // 3. PREMIÈRE UTILISATION : données vierges
+            console.log('📁 Première utilisation - création données');
             const defaultData = {
                 pressData: [],
                 audioVisuelData: [],
                 emissionData: [],
                 spotData: [],
                 nocommentData: [],
-                metadata: { lastUpdated: new Date().toISOString() }
+                settings: { videosPerPage: 3 },
+                metadata: {
+                    created: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString()
+                }
             };
             
-            return { success: true, data: defaultData, source: 'default' };
+            // Sauvegarder immédiatement sur Cloudinary
+            await this.saveData(defaultData);
+            
+            return { 
+                success: true, 
+                data: defaultData, 
+                source: 'default' 
+            };
             
         } catch (error) {
             console.error('❌ Erreur chargement:', error);
             
-            // Dernier fallback
+            // DERNIER FALLBACK
             const cache = localStorage.getItem('cloudinary_cache');
             if (cache) {
-                return { success: true, data: JSON.parse(cache), source: 'cache' };
+                return { 
+                    success: true, 
+                    data: JSON.parse(cache), 
+                    source: 'cache_fallback' 
+                };
             }
             
             return { 
                 success: true, 
                 data: {
-                    pressData: [],
-                    audioVisuelData: [],
-                    emissionData: [],
-                    spotData: [],
-                    nocommentData: [],
-                    metadata: { lastUpdated: new Date().toISOString() }
+                    pressData: [], audioVisuelData: [], emissionData: [],
+                    spotData: [], nocommentData: [], metadata: {}
                 }, 
-                source: 'default' 
+                source: 'emergency' 
             };
         }
-    },
-    
-    async syncData() {
-        return this.loadData();
     }
 };
 
