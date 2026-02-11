@@ -1,49 +1,87 @@
-// data.js - Version CLOUDINARY UNIQUEMENT
+// data.js - VERSION SIMPLIFIÉE ET 100% FONCTIONNELLE
 const ExcellenceMediaData = {
+    // Données en mémoire
     pressData: [],
     audioVisuelData: [],
     emissionData: [],
     spotData: [],
     nocommentData: [],
+    metadata: {},
     
-    async load() {
-    console.log('📦 Chargement des données...');
-    
-    if (!window.CloudinaryDB) {
-        console.error('❌ CloudinaryDB manquant');
-        return this.getDefault();
-    }
-    
-    try {
-        const result = await window.CloudinaryDB.loadData();
+    // Charger les données (SANS async/await)
+    load: function() {
+        console.log("📦 Chargement des données...");
         
-        if (result.success && result.data) {
-            // 🔥 MISE À JOUR FORCÉE DE TOUTES LES SECTIONS
-            this.pressData = result.data.pressData || [];
-            this.audioVisuelData = result.data.audioVisuelData || [];
-            this.emissionData = result.data.emissionData || [];
-            this.spotData = result.data.spotData || [];
-            this.nocommentData = result.data.nocommentData || [];
+        return new Promise(function(resolve, reject) {
+            if (!window.CloudinaryDB) {
+                console.error("❌ CloudinaryDB non disponible");
+                resolve(ExcellenceMediaData.getDefault());
+                return;
+            }
             
-            console.log('✅ Données chargées depuis', result.source);
-            console.log('📰 Articles chargés:', this.pressData.length);
-            
-            // 🔥 RAFRAÎCHIR L'AFFICHAGE
-            if (window.loadPressData) window.loadPressData();
-            if (window.loadArticlesList) window.loadArticlesList();
-            if (window.loadReorderLists) window.loadReorderLists();
-            
-            return result.data;
-        }
-    } catch (error) {
-        console.error('❌ Erreur load:', error);
-    }
+            window.CloudinaryDB.loadData().then(function(result) {
+                if (result.success && result.data) {
+                    ExcellenceMediaData.pressData = result.data.pressData || [];
+                    ExcellenceMediaData.audioVisuelData = result.data.audioVisuelData || [];
+                    ExcellenceMediaData.emissionData = result.data.emissionData || [];
+                    ExcellenceMediaData.spotData = result.data.spotData || [];
+                    ExcellenceMediaData.nocommentData = result.data.nocommentData || [];
+                    ExcellenceMediaData.metadata = result.data.metadata || {};
+                    
+                    console.log("✅ Données chargées depuis", result.source || "cloudinary");
+                    console.log("📰 Articles:", ExcellenceMediaData.pressData.length);
+                    console.log("🎬 Vidéos audio:", ExcellenceMediaData.audioVisuelData.length);
+                    console.log("📺 Émissions:", ExcellenceMediaData.emissionData.length);
+                    console.log("📢 Spots:", ExcellenceMediaData.spotData.length);
+                    console.log("🎥 No-comment:", ExcellenceMediaData.nocommentData.length);
+                    
+                    resolve(result.data);
+                } else {
+                    var defaultData = ExcellenceMediaData.getDefault();
+                    ExcellenceMediaData.setData(defaultData);
+                    resolve(defaultData);
+                }
+            }).catch(function(error) {
+                console.error("❌ Erreur chargement:", error);
+                var defaultData = ExcellenceMediaData.getDefault();
+                ExcellenceMediaData.setData(defaultData);
+                resolve(defaultData);
+            });
+        });
+    },
     
-    return this.getDefault();
-}
+    // Définir les données
+    setData: function(data) {
+        this.pressData = data.pressData || [];
+        this.audioVisuelData = data.audioVisuelData || [];
+        this.emissionData = data.emissionData || [];
+        this.spotData = data.spotData || [];
+        this.nocommentData = data.nocommentData || [];
+        this.metadata = data.metadata || { lastUpdated: new Date().toISOString() };
+    },
     
-    async save() {
-        const data = {
+    // Données par défaut
+    getDefault: function() {
+        return {
+            pressData: [],
+            audioVisuelData: [],
+            emissionData: [],
+            spotData: [],
+            nocommentData: [],
+            settings: { videosPerPage: 3 },
+            metadata: {
+                created: new Date().toISOString(),
+                lastUpdated: new Date().toISOString(),
+                version: "1.0"
+            }
+        };
+    },
+    
+    // Sauvegarder
+    save: function() {
+        console.log("💾 Sauvegarde des données...");
+        
+        var data = {
             pressData: this.pressData,
             audioVisuelData: this.audioVisuelData,
             emissionData: this.emissionData,
@@ -52,105 +90,169 @@ const ExcellenceMediaData = {
             settings: { videosPerPage: 3 },
             metadata: {
                 lastUpdated: new Date().toISOString(),
-                version: '1.0'
+                version: "1.0"
             }
         };
         
-        return await window.CloudinaryDB.saveData(data);
-    },
-    
-    // CRUD Presse
-    async addPressArticle(article) {
-        article.id = `press_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-        article.dateAdded = new Date().toISOString();
-        this.pressData.unshift(article);
-        return await this.save();
-    },
-    
-    async updatePressArticle(id, updates) {
-        const index = this.pressData.findIndex(a => a.id === id);
-        if (index === -1) return { success: false };
-        this.pressData[index] = { ...this.pressData[index], ...updates, lastModified: new Date().toISOString() };
-        return await this.save();
-    },
-    
-    async deletePressArticle(id) {
-        this.pressData = this.pressData.filter(a => a.id !== id);
-        return await this.save();
-    },
-    
-    // CRUD Vidéos
-    async addVideo(type, video) {
-        const section = this.getSectionName(type);
-        if (!section) return { success: false };
-        
-        video.id = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-        video.dateAdded = new Date().toISOString();
-        this[section].unshift(video);
-        return await this.save();
-    },
-    
-    async updateVideo(type, id, updates) {
-        const section = this.getSectionName(type);
-        if (!section) return { success: false };
-        
-        const index = this[section].findIndex(v => v.id === id);
-        if (index === -1) return { success: false };
-        
-        this[section][index] = { ...this[section][index], ...updates, lastModified: new Date().toISOString() };
-        return await this.save();
-    },
-    
-    async deleteVideo(type, id) {
-        const section = this.getSectionName(type);
-        if (!section) return { success: false };
-        
-        this[section] = this[section].filter(v => v.id !== id);
-        return await this.save();
-    },
-    
-    async reorderSection(section, newOrder) {
-        if (!this[section]) return { success: false };
-        
-        const reordered = [];
-        newOrder.forEach(id => {
-            const item = this[section].find(item => item.id === id);
-            if (item) reordered.push(item);
+        return new Promise(function(resolve, reject) {
+            if (!window.CloudinaryDB) {
+                console.error("❌ CloudinaryDB non disponible");
+                resolve({ success: false, error: "CloudinaryDB manquant" });
+                return;
+            }
+            
+            window.CloudinaryDB.saveData(data).then(function(result) {
+                if (result.success) {
+                    console.log("✅ Données sauvegardées avec succès");
+                }
+                resolve(result);
+            }).catch(function(error) {
+                console.error("❌ Erreur sauvegarde:", error);
+                resolve({ success: false, error: error.message });
+            });
         });
+    },
+    
+    // ================ CRUD PRESSE ================
+    addPressArticle: function(article) {
+        article.id = "press_" + Date.now() + "_" + Math.random().toString(36).substring(2, 8);
+        article.dateAdded = new Date().toISOString();
+        article.lastModified = new Date().toISOString();
+        
+        this.pressData.unshift(article);
+        return this.save();
+    },
+    
+    updatePressArticle: function(id, updates) {
+        var index = -1;
+        for (var i = 0; i < this.pressData.length; i++) {
+            if (this.pressData[i].id === id) {
+                index = i;
+                break;
+            }
+        }
+        
+        if (index === -1) {
+            return Promise.resolve({ success: false, error: "Article non trouvé" });
+        }
+        
+        this.pressData[index] = Object.assign({}, this.pressData[index], updates);
+        this.pressData[index].lastModified = new Date().toISOString();
+        
+        return this.save();
+    },
+    
+    deletePressArticle: function(id) {
+        var newData = [];
+        for (var i = 0; i < this.pressData.length; i++) {
+            if (this.pressData[i].id !== id) {
+                newData.push(this.pressData[i]);
+            }
+        }
+        this.pressData = newData;
+        return this.save();
+    },
+    
+    // ================ CRUD VIDÉOS ================
+    addVideo: function(type, video) {
+        var section = this.getSectionName(type);
+        if (!section || !this[section]) {
+            return Promise.resolve({ success: false, error: "Section invalide" });
+        }
+        
+        video.id = type + "_" + Date.now() + "_" + Math.random().toString(36).substring(2, 8);
+        video.dateAdded = new Date().toISOString();
+        video.lastModified = new Date().toISOString();
+        
+        this[section].unshift(video);
+        return this.save();
+    },
+    
+    updateVideo: function(type, id, updates) {
+        var section = this.getSectionName(type);
+        if (!section || !this[section]) {
+            return Promise.resolve({ success: false, error: "Section invalide" });
+        }
+        
+        var index = -1;
+        for (var i = 0; i < this[section].length; i++) {
+            if (this[section][i].id === id) {
+                index = i;
+                break;
+            }
+        }
+        
+        if (index === -1) {
+            return Promise.resolve({ success: false, error: "Vidéo non trouvée" });
+        }
+        
+        this[section][index] = Object.assign({}, this[section][index], updates);
+        this[section][index].lastModified = new Date().toISOString();
+        
+        return this.save();
+    },
+    
+    deleteVideo: function(type, id) {
+        var section = this.getSectionName(type);
+        if (!section || !this[section]) {
+            return Promise.resolve({ success: false, error: "Section invalide" });
+        }
+        
+        var newData = [];
+        for (var i = 0; i < this[section].length; i++) {
+            if (this[section][i].id !== id) {
+                newData.push(this[section][i]);
+            }
+        }
+        this[section] = newData;
+        return this.save();
+    },
+    
+    // ================ RÉORGANISATION ================
+    reorderSection: function(section, newOrder) {
+        if (!this[section]) {
+            return Promise.resolve({ success: false, error: "Section invalide" });
+        }
+        
+        var reordered = [];
+        for (var i = 0; i < newOrder.length; i++) {
+            var id = newOrder[i];
+            for (var j = 0; j < this[section].length; j++) {
+                if (this[section][j].id === id) {
+                    reordered.push(this[section][j]);
+                    break;
+                }
+            }
+        }
         
         this[section] = reordered;
-        return await this.save();
+        return this.save();
     },
     
-    getSectionName(type) {
-        const map = {
-            'audio': 'audioVisuelData', 'audiovisuel': 'audioVisuelData',
-            'emission': 'emissionData', 'emissions': 'emissionData',
-            'spot': 'spotData', 'spots': 'spotData',
-            'nocomment': 'nocommentData',
-            'presse': 'pressData'
-        };
-        return map[type];
+    // ================ UTILITAIRES ================
+    getSectionName: function(type) {
+        if (type === "audio" || type === "audiovisuel") return "audioVisuelData";
+        if (type === "emission" || type === "emissions") return "emissionData";
+        if (type === "spot" || type === "spots") return "spotData";
+        if (type === "nocomment") return "nocommentData";
+        if (type === "presse") return "pressData";
+        return null;
     },
     
-    getStats() {
+    getStats: function() {
         return {
             presse: this.pressData.length,
             audio: this.audioVisuelData.length,
             emissions: this.emissionData.length,
             spots: this.spotData.length,
             nocomment: this.nocommentData.length,
-            lastUpdated: this.metadata?.lastUpdated || 'Jamais'
-        };
-    },
-    
-    getDefault() {
-        return {
-            pressData: [], audioVisuelData: [], emissionData: [],
-            spotData: [], nocommentData: [], metadata: {}
+            lastUpdated: this.metadata?.lastUpdated || "Jamais"
         };
     }
 };
 
+// Exposer globalement
 window.ExcellenceMediaData = ExcellenceMediaData;
 
+// Initialisation automatique
+console.log("🚀 ExcellenceMediaData chargé");
