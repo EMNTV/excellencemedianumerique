@@ -3,7 +3,7 @@ const CloudinaryConfig = {
     cloudName: 'dv36bmp5e',
     
     // 🔥 À CHANGER : mettez le nom du preset que vous avez créé !
-    uploadPreset: 'excellence_media_unsigned',
+    uploadPreset: 'excellence_media',
     
     async testConnection() {
         console.log('✅ Cloudinary prêt');
@@ -46,3 +46,4 @@ const CloudinaryConfig = {
 };
 
 window.CloudinaryConfig = CloudinaryConfig;
+
