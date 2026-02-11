@@ -7,26 +7,40 @@ const ExcellenceMediaData = {
     nocommentData: [],
     
     async load() {
-        if (!window.CloudinaryDB) {
-            console.error('❌ CloudinaryDB non disponible');
-            return this.getDefault();
-        }
-        
+    console.log('📦 Chargement des données...');
+    
+    if (!window.CloudinaryDB) {
+        console.error('❌ CloudinaryDB manquant');
+        return this.getDefault();
+    }
+    
+    try {
         const result = await window.CloudinaryDB.loadData();
         
-        if (result.success) {
+        if (result.success && result.data) {
+            // 🔥 MISE À JOUR FORCÉE DE TOUTES LES SECTIONS
             this.pressData = result.data.pressData || [];
             this.audioVisuelData = result.data.audioVisuelData || [];
             this.emissionData = result.data.emissionData || [];
             this.spotData = result.data.spotData || [];
             this.nocommentData = result.data.nocommentData || [];
             
-            console.log(`✅ Données chargées [${result.source}]`);
-            console.log('📊 Stats:', this.getStats());
+            console.log('✅ Données chargées depuis', result.source);
+            console.log('📰 Articles chargés:', this.pressData.length);
+            
+            // 🔥 RAFRAÎCHIR L'AFFICHAGE
+            if (window.loadPressData) window.loadPressData();
+            if (window.loadArticlesList) window.loadArticlesList();
+            if (window.loadReorderLists) window.loadReorderLists();
+            
+            return result.data;
         }
-        
-        return result.data;
-    },
+    } catch (error) {
+        console.error('❌ Erreur load:', error);
+    }
+    
+    return this.getDefault();
+}
     
     async save() {
         const data = {
@@ -139,3 +153,4 @@ const ExcellenceMediaData = {
 };
 
 window.ExcellenceMediaData = ExcellenceMediaData;
+
