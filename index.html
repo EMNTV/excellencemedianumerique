@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excellence Media Numérique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- Header et Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="https://www.youtube.com/@excellencemedianumerique" aria-label="Accueil" title="Accueil">
+                    <img src="Logo.png" alt="Logo" class="logo-icon">
+                </a>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#accueil" class="nav-link">Accueil</a></li>
+                <li><a href="#presse-ecrite" class="nav-link">Presse Écrite</a></li>
+                <li><a href="#audio-visuel" class="nav-link">Audio-visuel</a></li>
+                <li><a href="#emission" class="nav-link">Émissions</a></li>
+                <li><a href="#spot" class="nav-link">Spots Publicitaires</a></li>
+                <li><a href="#nocomment" class="nav-link">No-Comment</a></li>
+                <li><a href="#" id="dashboardLink" class="nav-link">Dashboard</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Section Accueil -->
+        <section id="accueil" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Bienvenue sur Excellence Media Numérique</h2>
+            </div>
+
+
+            <div class="hero">
+                <div id="recherche" class="search-section overlay-search" aria-label="Rechercher du contenu">
+                    <div class="section-header">
+                        <h2 class="section-title">Rechercher du contenu</h2>
+                    </div>
+                    <div class="main-search-container">
+                        <div class="search-wrapper">
+                            <input type="text" id="global-search" class="main-search-input"
+                                placeholder="Rechercher un article, une vidéo, une émission...">
+                            <button class="btn btn-primary main-search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i> Rechercher
+                            </button>
+                            <button class="btn main-search-btn" id="resetSearchBtn" style="display: none;">
+                                <i class="fas fa-times"></i> Effacer
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Carrousel d'images placé dans la section Accueil -->
+                <div class="carousel" id="heroCarousel" aria-label="Carrousel d'images">
+                    <div class="carousel-slide active">
+                        <img src="img1.jpg" alt="Slide 1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="img2.jpg" alt="Slide 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="img3.jpg" alt="Slide 3">
+                    </div>
+                    <div class="carousel-dots" role="tablist">
+                        <button class="dot active" data-index="0" aria-label="Slide 1"></button>
+                        <button class="dot" data-index="1" aria-label="Slide 2"></button>
+                        <button class="dot" data-index="2" aria-label="Slide 3"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Section Presse Écrite -->
+        <section id="presse-ecrite" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Presse Écrite</h2>
+                <div class="section-controls">
+                    <button class="btn btn-primary" id="scrollLeftBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn btn-primary" id="scrollRightBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="press-ecrite-container">
+                <div class="press-ecrite-scroll" id="pressEcriteScroll">
+                    <!-- Les articles de presse écrite seront chargés ici -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Presse Audio-visuel -->
+        <section id="audio-visuel" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Presse Audio-visuel</h2>
+            </div>
+
+            <div class="video-container" id="audioVisuelVideos">
+                <!-- Les vidéos audio-visuel seront chargées ici -->
+            </div>
+
+            <div class="pagination" id="audioVisuelPagination">
+                <!-- La pagination sera générée ici -->
+            </div>
+        </section>
+
+        <!-- Section Émissions -->
+        <section id="emission" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Émissions</h2>
+            </div>
+
+            <div class="video-container" id="emissionVideos">
+                <!-- Les émissions seront chargées ici -->
+            </div>
+
+            <div class="pagination" id="emissionPagination">
+                <!-- La pagination sera générée ici -->
+            </div>
+        </section>
+
+        <!-- Section Spots Publicitaires -->
+        <section id="spot" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Spots Publicitaires</h2>
+            </div>
+
+            <div class="video-container" id="spotVideos">
+                <!-- Les spots publicitaires seront chargés ici -->
+            </div>
+
+            <div class="pagination" id="spotPagination">
+                <!-- La pagination sera générée ici -->
+            </div>
+        </section>
+
+        <!-- Section No-Comment -->
+        <section id="nocomment" class="section">
+            <div class="section-header">
+                <h2 class="section-title">No-Comment</h2>
+            </div>
+
+            <div class="video-container" id="nocommentVideos">
+                <!-- Les vidéos no-comment seront chargées ici -->
+            </div>
+
+            <div class="pagination" id="nocommentPagination">
+                <!-- La pagination sera générée ici -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Excellence Media Numérique</h3>
+                <p>Plateforme de diffusion de contenus multimédias de qualité depuis 2024.</p>
+
+                <div class="pdf-download">
+                    <a href="FZ 1000.pdf" target="_blank" class="pdf-link">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Télécharger notre brochure PDF</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Liens rapides</h3>
+                <a href="#presse-ecrite">Presse Écrite</a>
+                <a href="#audio-visuel">Audio-visuel</a>
+                <a href="#emission">Émissions</a>
+                <a href="#spot">Spots Publicitaires</a>
+                <a href="#nocomment">No-Comment</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: excellencemedianumerique@gmail.com</p>
+                <p>Téléphone: +242 06 504 25 88</p>
+                <div class="social-icons">
+                    <a href="https://www.youtube.com/@excellencemedianumerique"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61576697857842"><i class="fab fa-facebook"></i></a>
+                    <a href="https://x.com/MediaNumer55618"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.tiktok.com/@excellencemedianumerique?_r=1&_t=ZN-92l5W2W36zG"><i
+                            class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-android"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top" id="scrollTopBtn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Modal pour presse écrite -->
+    <div class="modal" id="pressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" class="modal-img" alt="Image">
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal pour Dashboard -->
+    <!-- Password Modal remplacé par Google Sign-In Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-content">
+            <h2>Connexion Admin</h2>
+            <p>Veuillez vous connecter avec votre compte Google autorisé :</p>
+
+            <div id="google-signin-container" style="margin: 20px 0;">
+                <div id="g_id_onload"
+                    data-client_id="204264169050-bqu39pj1pmtj5lih7lsceah0aqan1fsr.apps.googleusercontent.com"
+                    data-context="signin" data-ux_mode="popup" data-callback="handleGoogleSignIn"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                    data-text="signin_with" data-size="large" data-logo_alignment="left" data-width="300">
+                </div>
+            </div>
+
+            <div class="signin-info" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <p><strong>Accès restreint :</strong></p>
+                <p>Seul le compte <strong>excellencemedianumerique@gmail.com</strong> peut accéder au Dashboard.</p>
+            </div>
+
+            <div class="form-actions">
+                <!-- SUPPRIMER L'INPUT DE MOT DE PASSE ANCIEN -->
+                <!-- <input type="password" id="password-input" placeholder="Mot de passe"> -->
+                <button class="btn" id="cancelPassword">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Modal -->
+    <div class="dashboard-modal" id="dashboardModal">
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h2>Dashboard - Administration</h2>
+                <button class="close-modal" id="closeDashboard">&times;</button>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="dashboard-tab" data-tab="presse">Presse Écrite</button>
+                <button class="dashboard-tab" data-tab="audiovisuel">Audio-visuel</button>
+                <button class="dashboard-tab" data-tab="emissions">Émissions</button>
+                <button class="dashboard-tab" data-tab="spots">Spots</button>
+                <button class="dashboard-tab" data-tab="nocomment">No-Comment</button>
+                <button class="dashboard-tab active" data-tab="reorder">Réorganiser</button>
+                <button class="dashboard-tab logout-tab" data-tab="logout" id="logoutTab">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+
+            <div class="dashboard-body">
+                <!-- Tab Presse Écrite -->
+                <div class="tab-content active" id="presse-tab">
+                    <h3>Gérer la Presse Écrite</h3>
+                    <div class="alert" id="presseAlert"></div>
+
+                    <div class="form-group">
+                        <label for="articleTitle">Titre de l'article:</label>
+                        <input type="text" id="articleTitle" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleDescription">Description:</label>
+                        <textarea id="articleDescription" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleImage">Image:</label>
+                        <input type="file" id="articleImage" class="form-control" accept="image/*">
+                        <div id="imagePreview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="addArticle">Ajouter Article</button>
+                        <button class="btn" id="updateArticle" style="display:none;">Mettre à jour</button>
+                        <button class="btn" id="cancelEdit">Annuler</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Articles existants:</h4>
+                    <div id="articlesList">
+                        <!-- Liste des articles existants -->
+                    </div>
+                </div>
+
+                <!-- Tab Audio-visuel -->
+                <div class="tab-content" id="audiovisuel-tab">
+                    <h3>Gérer l'Audio-visuel</h3>
+                    <div class="alert" id="audioAlert"></div>
+
+                    <div class="form-group">
+                        <label for="videoTitle">Titre de la vidéo:</label>
+                        <input type="text" id="videoTitle" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="videoUrl">URL YouTube:</label>
+                        <input type="text" id="videoUrl" class="form-control"
+                            placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="addAudioVideo">Ajouter Vidéo</button>
+                        <button class="btn" id="updateAudioVideo" style="display:none;">Mettre à jour</button>
+                        <button class="btn" id="cancelAudioEdit">Annuler</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Vidéos existantes:</h4>
+                    <div id="audioVideosList">
+                        <!-- Liste des vidéos audio-visuel existantes -->
+                    </div>
+                </div>
+
+                <!-- Tab Émissions -->
+                <div class="tab-content" id="emissions-tab">
+                    <h3>Gérer les Émissions</h3>
+                    <div class="alert" id="emissionAlert"></div>
+
+                    <div class="form-group">
+                        <label for="emissionTitle">Titre de l'émission:</label>
+                        <input type="text" id="emissionTitle" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emissionUrl">URL YouTube:</label>
+                        <input type="text" id="emissionUrl" class="form-control"
+                            placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="addEmission">Ajouter Émission</button>
+                        <button class="btn" id="updateEmission" style="display:none;">Mettre à jour</button>
+                        <button class="btn" id="cancelEmissionEdit">Annuler</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Émissions existantes:</h4>
+                    <div id="emissionsList">
+                        <!-- Liste des émissions existantes -->
+                    </div>
+                </div>
+
+                <!-- Tab Spots Publicitaires -->
+                <div class="tab-content" id="spots-tab">
+                    <h3>Gérer les Spots Publicitaires</h3>
+                    <div class="alert" id="spotAlert"></div>
+
+                    <div class="form-group">
+                        <label for="spotTitle">Titre du spot:</label>
+                        <input type="text" id="spotTitle" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="spotUrl">URL YouTube:</label>
+                        <input type="text" id="spotUrl" class="form-control"
+                            placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="addSpot">Ajouter Spot</button>
+                        <button class="btn" id="updateSpot" style="display:none;">Mettre à jour</button>
+                        <button class="btn" id="cancelSpotEdit">Annuler</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Spots existants:</h4>
+                    <div id="spotsList">
+                        <!-- Liste des spots existants -->
+                    </div>
+                </div>
+
+                <!-- Tab No-Comment -->
+                <div class="tab-content" id="nocomment-tab">
+                    <h3>Gérer les No-Comment</h3>
+                    <div class="alert" id="nocommentAlert"></div>
+
+                    <div class="form-group">
+                        <label for="nocommentTitle">Titre de la vidéo:</label>
+                        <input type="text" id="nocommentTitle" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nocommentUrl">URL YouTube:</label>
+                        <input type="text" id="nocommentUrl" class="form-control"
+                            placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="addNocomment">Ajouter Vidéo</button>
+                        <button class="btn" id="updateNocomment" style="display:none;">Mettre à jour</button>
+                        <button class="btn" id="cancelNocommentEdit">Annuler</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Vidéos No-Comment existantes:</h4>
+                    <div id="nocommentList">
+                        <!-- Liste des vidéos no-comment existantes -->
+                    </div>
+                </div>
+
+                <!-- Tab Réorganisation -->
+                <div class="tab-content active" id="reorder-tab">
+                    <h3>Réorganiser et Gérer les contenus</h3>
+                    <p>Glissez-déposez pour réorganiser l'ordre d'affichage. Cliquez sur un élément pour le modifier ou
+                        le supprimer.</p>
+
+                    <!-- Section de navigation pour choisir le type de contenu -->
+                    <div class="reorder-type-selector" style="margin: 20px 0;">
+                        <button class="btn btn-primary reorder-type-btn active" data-type="presse">Presse
+                            Écrite</button>
+                        <button class="btn btn-primary reorder-type-btn" data-type="audiovisuel">Audio-visuel</button>
+                        <button class="btn btn-primary reorder-type-btn" data-type="emissions">Émissions</button>
+                        <button class="btn btn-primary reorder-type-btn" data-type="spots">Spots</button>
+                        <button class="btn btn-primary reorder-type-btn" data-type="nocomment">No-Comment</button>
+                    </div>
+
+                    <!-- Dans la section Réorganisation du dashboard -->
+                    <div class="sync-section" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <h4>Synchronisation Cloudinary</h4>
+                        <p>Statut: <span id="syncStatus">Non synchronisé</span></p>
+                        <button class="btn btn-primary" onclick="syncWithCloudinary()">
+                            <i class="fas fa-sync-alt"></i> Synchroniser maintenant
+                        </button>
+                        <button class="btn" onclick="backupToLocal()">
+                            <i class="fas fa-download"></i> Télécharger sauvegarde
+                        </button>
+                    </div>
+
+                    <!-- Zone d'affichage des listes -->
+                    <div class="reorder-lists-container">
+                        <!-- Presse Écrite -->
+                        <div class="reorder-section active" id="reorder-section-presse">
+                            <h4>Presse Écrite:</h4>
+                            <ul class="sortable-list" id="reorderPress">
+                                <!-- Articles à réorganiser -->
+                            </ul>
+
+                            <div class="reorder-actions">
+                                <button class="btn btn-primary" onclick="addNewItemInReorder('presse')">
+                                    <i class="fas fa-plus"></i> Ajouter un article
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Audio-visuel -->
+                        <div class="reorder-section" id="reorder-section-audiovisuel">
+                            <h4>Audio-visuel:</h4>
+                            <ul class="sortable-list" id="reorderAudio">
+                                <!-- Vidéos audio-visuel à réorganiser -->
+                            </ul>
+
+                            <div class="reorder-actions">
+                                <button class="btn btn-primary" onclick="addNewItemInReorder('audiovisuel')">
+                                    <i class="fas fa-plus"></i> Ajouter une vidéo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Émissions -->
+                        <div class="reorder-section" id="reorder-section-emissions">
+                            <h4>Émissions:</h4>
+                            <ul class="sortable-list" id="reorderEmission">
+                                <!-- Émissions à réorganiser -->
+                            </ul>
+
+                            <div class="reorder-actions">
+                                <button class="btn btn-primary" onclick="addNewItemInReorder('emissions')">
+                                    <i class="fas fa-plus"></i> Ajouter une émission
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Spots Publicitaires -->
+                        <div class="reorder-section" id="reorder-section-spots">
+                            <h4>Spots Publicitaires:</h4>
+                            <ul class="sortable-list" id="reorderSpot">
+                                <!-- Spots à réorganiser -->
+                            </ul>
+
+                            <div class="reorder-actions">
+                                <button class="btn btn-primary" onclick="addNewItemInReorder('spots')">
+                                    <i class="fas fa-plus"></i> Ajouter un spot
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- No-Comment -->
+                        <div class="reorder-section" id="reorder-section-nocomment">
+                            <h4>No-Comment:</h4>
+                            <ul class="sortable-list" id="reorderNocomment">
+                                <!-- No-Comment à réorganiser -->
+                            </ul>
+
+                            <div class="reorder-actions">
+                                <button class="btn btn-primary" onclick="addNewItemInReorder('nocomment')">
+                                    <i class="fas fa-plus"></i> Ajouter une vidéo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire d'édition (caché par défaut) -->
+                    <div class="reorder-edit-form" id="reorderEditForm"
+                        style="display: none; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <h4 id="reorderEditTitle">Modifier l'élément</h4>
+                        <div class="alert" id="reorderEditAlert"></div>
+
+                        <!-- Champs dynamiques -->
+                        <div id="reorderEditFields">
+                            <!-- Les champs seront injectés ici dynamiquement -->
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary" id="saveReorderEdit">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                            <button class="btn btn-danger" id="deleteReorderItem">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                            <button class="btn" id="cancelReorderEdit">
+                                <i class="fas fa-times"></i> Annuler
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 2rem;">
+                        <button class="btn btn-primary" id="saveOrder">
+                            <i class="fas fa-save"></i> Enregistrer l'ordre
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <script src="cloudinary-config.js"></script>
+    <script src="cloudinary-db.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
