@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excellence Media Numérique</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { poppins: ['Poppins', 'sans-serif'] },
+          colors: {
+            primary: { 50: '#fff9eb', 100: '#ffefc6', 200: '#ffdc88', 300: '#ffc94a', 400: '#ffb520', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 800: '#92400e', 900: '#78350f' },
+            emnBlue: '#188ab8',
+            dark: { 50: '#f8fafc', 100: '#e2e8f0', 200: '#1e293b', 300: '#0f172a', 400: '#020617', 500: '#010312' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #f59e0b;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d97706;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(24, 138, 184, 0.1);
+      shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    .glass-light {
+      background: rgba(248, 250, 252, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(24, 138, 184, 0.05);
+    }
+
+    .gradient-bg {
+      background: #ffffff;
+    }
+
+    .gradient-text {
+      color: #188ab8;
+    }
+
+    .gradient-border {
+      border-image: linear-gradient(135deg, #f59e0b, #d97706) 1;
+    }
+
+    .hero-gradient {
+      background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+    }
+
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #188ab8;
+      transition: width 0.3s;
+      border-radius: 2px;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .carousel-slide {
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide-up {
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pulse-gold {
+      animation: pulseGold 2s infinite;
+    }
+
+    @keyframes pulseGold {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 15px rgba(245, 158, 11, 0);
+      }
+    }
+
+    .scroll-container {
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .notification {
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .modal-overlay {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .drag-over {
+      border: 2px dashed #f59e0b !important;
+      background: rgba(245, 158, 11, 0.1) !important;
+    }
+
+    .dragging {
+      opacity: 0.5;
+    }
+
+    .btn-gold {
+      background: #f59e0b;
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-gold:hover {
+      background: #d97706;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .section-hidden {
+      display: none;
+    }
+
+    .section-visible {
+      display: block;
+    }
+
+    .tab-active {
+      background: #188ab8;
+      color: white !important;
+    }
+
+    .youtube-card {
+      position: relative;
+      padding-bottom: 56.25%;
+    }
+
+    .youtube-card iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glow-line {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+
+<body class="gradient-bg text-gray-100 min-h-screen">
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 max-w-sm"></div>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    class="fixed bottom-6 right-6 z-50 w-12 h-12 btn-gold rounded-full flex items-center justify-center shadow-lg opacity-0 pointer-events-none transition-all duration-300"
+    aria-label="Retour en haut">
+    <i class="fas fa-chevron-up text-lg"></i>
+  </button>
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-white shadow-md transition-all duration-300 border-b border-gray-100"
+    id="main-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="#" onclick="navigateTo('accueil')" class="flex items-center gap-3 group">
+          <img src="logo.png" alt="Excellence Media Logo"
+            class="h-12 md:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300">
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center gap-1">
+          <a href="#" onclick="navigateTo('accueil')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors active"
+            data-section="accueil">Accueil</a>
+          <a href="#" onclick="navigateTo('presse')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors"
+            data-section="presse">Presse Écrite</a>
+          <a href="#" onclick="navigateTo('audiovisuel')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors"
+            data-section="audiovisuel">Audio-visuel</a>
+          <a href="#" onclick="navigateTo('emissions')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors"
+            data-section="emissions">Émissions</a>
+          <a href="#" onclick="navigateTo('spots')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors"
+            data-section="spots">Spots Publicitaires</a>
+          <a href="#" onclick="navigateTo('nocomment')"
+            class="nav-link px-3 py-2 text-sm font-semibold text-emnBlue hover:opacity-70 transition-colors"
+            data-section="nocomment">No-Comment</a>
+          <a href="#" onclick="openDashboard()"
+            class="nav-link px-3 py-2 text-sm font-medium text-primary-400 hover:text-primary-300 transition-colors flex items-center gap-1.5"
+            data-section="dashboard">
+            <i class="fas fa-shield-halved text-xs"></i> Dashboard
+          </a>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()"
+          class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition">
+          <i class="fas fa-bars text-xl text-emnBlue"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-72 z-[60] glass shadow-2xl lg:hidden">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-lg font-bold gradient-text">Menu</h2>
+        <button onclick="toggleMobileMenu()"
+          class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5">
+          <i class="fas fa-times text-xl text-gray-400"></i>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-1">
+        <a href="#" onclick="navigateTo('accueil');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-home w-5 opacity-70"></i> Accueil</a>
+        <a href="#" onclick="navigateTo('presse');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-newspaper w-5 opacity-70"></i> Presse Écrite</a>
+        <a href="#" onclick="navigateTo('audiovisuel');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-video w-5 opacity-70"></i> Audio-visuel</a>
+        <a href="#" onclick="navigateTo('emissions');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-tv w-5 opacity-70"></i> Émissions</a>
+        <a href="#" onclick="navigateTo('spots');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-bullhorn w-5 opacity-70"></i> Spots Publicitaires</a>
+        <a href="#" onclick="navigateTo('nocomment');toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-emnBlue hover:bg-gray-50 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-volume-xmark w-5 opacity-70"></i> No-Comment</a>
+        <div class="glow-line my-3 rounded-full"></div>
+        <a href="#" onclick="openDashboard();toggleMobileMenu()"
+          class="px-4 py-3 rounded-xl text-primary-400 hover:bg-primary-500/10 transition flex items-center gap-3 font-medium"><i
+            class="fas fa-shield-halved w-5"></i> Dashboard</a>
+      </nav>
+    </div>
+  </div>
+  <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 z-[55] hidden lg:hidden"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-16 md:pt-20">
+
+    <!-- ===== ACCUEIL ===== -->
+    <section id="section-accueil" class="section-visible">
+      <!-- Hero -->
+      <div class="hero-gradient min-h-[70vh] flex items-center justify-center relative overflow-hidden">
+
+        <!-- Carousel as Background -->
+        <div class="absolute inset-0 z-0">
+          <div id="carousel-track" class="flex h-full carousel-slide">
+            <!-- Slide 1 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+              <img src="img1.jpg" class="w-full h-full object-cover" alt="Excellence Media">
+              
+            </div>
+            <!-- Slide 2 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+              <img src="img2.jpg" class="w-full h-full object-cover" alt="Production Audiovisuelle">
+              <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 flex items-center justify-center">
+                <div class="text-center px-4">
+                  <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 slide-up">AUDIOVISUEL</h2>
+                  <p class="text-lg md:text-xl text-gray-200 slide-up">La puissance de l'image au service de l'excellence.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+              <img src="img3.jpg" class="w-full h-full object-cover" alt="Reportages et Émissions">
+              <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 flex items-center justify-center">
+                <div class="text-center px-4">
+                  <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 slide-up">ÉMISSIONS & NEWS</h2>
+                  <p class="text-lg md:text-xl text-gray-200 slide-up">Décryptage et analyses des faits marquants de l'actualité.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute inset-0 opacity-10 pointer-events-none z-10">
+          <div class="absolute top-20 left-10 w-72 h-72 bg-primary-500 rounded-full filter blur-[120px]"></div>
+          <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary-600 rounded-full filter blur-[150px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20">
+          <div class="text-center">
+            <!-- Search Bar -->
+            <div class="max-w-xl mx-auto fade-in mt-64 md:mt-80">
+              <div class="relative group">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition"></i>
+                <input type="text" id="search-input" placeholder="Rechercher du contenu..."
+                  class="w-full pl-12 pr-32 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/10 shadow-2xl transition"
+                  onkeyup="handleSearch(this.value)">
+                <button onclick="handleSearch(document.getElementById('search-input').value)"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 bg-emnBlue text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-lg">
+                  Rechercher
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Navigation Arrows (Side Corners) -->
+        <button onclick="carouselPrev()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-primary-500/40 transition text-white hidden md:flex">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button onclick="carouselNext()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-primary-500/40 transition text-white hidden md:flex">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+
+
+        <!-- Carousel Pagination Dots (Bottom Center) -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
+          <button onclick="carouselGo(0)" class="carousel-dot w-3 h-3 rounded-full bg-primary-500 transition"></button>
+          <button onclick="carouselGo(1)" class="carousel-dot w-3 h-3 rounded-full bg-gray-600 transition"></button>
+          <button onclick="carouselGo(2)" class="carousel-dot w-3 h-3 rounded-full bg-gray-600 transition"></button>
+        </div>
+
+      </div>
+
+      <!-- Quick Access Cards -->
+      
+
+      <!-- Home Content Previews (Recent Items) -->
+      <div id="home-main-content">
+        <div id="home-previews" class="max-w-7xl mx-auto px-4 sm:px-6 py-8"></div>
+      </div>
+
+      <!-- Search Results -->
+      <div id="home-search-results" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 hidden">
+        <div class="mb-8">
+          <h2 id="home-search-title" class="text-2xl font-bold gradient-text">Résultats de recherche</h2>
+        </div>
+        <div id="home-search-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="home-search-empty" class="hidden text-center py-16">
+          <i class="fas fa-search text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucun résultat trouvé</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRESSE ÉCRITE ===== -->
+    <section id="section-presse" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">Presse Écrite</h2>
+          <p class="text-gray-500">Articles et reportages d'excellence</p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div class="relative">
+          <button onclick="scrollPresse(-1)"
+            class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary-500/20 transition shadow-xl"><i
+              class="fas fa-chevron-left text-primary-400"></i></button>
+          <button onclick="scrollPresse(1)"
+            class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary-500/20 transition shadow-xl"><i
+              class="fas fa-chevron-right text-primary-400"></i></button>
+          <div id="presse-scroll" class="scroll-container flex gap-6 px-2 py-4">
+            <!-- Dynamic content -->
+          </div>
+        </div>
+        <div id="presse-empty" class="hidden text-center py-16">
+          <i class="fas fa-newspaper text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucun article disponible pour le moment</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AUDIO-VISUEL ===== -->
+    <section id="section-audiovisuel" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">Audio-visuel</h2>
+          <p class="text-gray-500">Nos productions vidéo</p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div id="audiovisuel-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic content -->
+        </div>
+        <div id="audiovisuel-empty" class="hidden text-center py-16">
+          <i class="fas fa-video text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucune vidéo disponible pour le moment</p>
+        </div>
+        <div id="audiovisuel-pagination" class="flex items-center justify-center gap-2 mt-8"></div>
+      </div>
+    </section>
+
+    <!-- ===== ÉMISSIONS ===== -->
+    <section id="section-emissions" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">Émissions</h2>
+          <p class="text-gray-500">Retrouvez vos émissions préférées</p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div id="emissions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic content -->
+        </div>
+        <div id="emissions-empty" class="hidden text-center py-16">
+          <i class="fas fa-tv text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucune émission disponible pour le moment</p>
+        </div>
+        <div id="emissions-pagination" class="flex items-center justify-center gap-2 mt-8"></div>
+      </div>
+    </section>
+
+    <!-- ===== SPOTS PUBLICITAIRES ===== -->
+    <section id="section-spots" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">Spots Publicitaires</h2>
+          <p class="text-gray-500">Nos créations publicitaires</p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div id="spots-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic content -->
+        </div>
+        <div id="spots-empty" class="hidden text-center py-16">
+          <i class="fas fa-bullhorn text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucun spot disponible pour le moment</p>
+        </div>
+        <div id="spots-pagination" class="flex items-center justify-center gap-2 mt-8"></div>
+      </div>
+    </section>
+
+    <!-- ===== NO-COMMENT ===== -->
+    <section id="section-nocomment" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">No-Comment</h2>
+          <p class="text-gray-500">Les images parlent d'elles-mêmes</p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div id="nocomment-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic content -->
+        </div>
+        <div id="nocomment-empty" class="hidden text-center py-16">
+          <i class="fas fa-volume-xmark text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucun contenu disponible pour le moment</p>
+        </div>
+        <div id="nocomment-pagination" class="flex items-center justify-center gap-2 mt-8"></div>
+      </div>
+    </section>
+
+    <!-- ===== SEARCH RESULTS ===== -->
+    <section id="section-search" class="section-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-extrabold gradient-text mb-3">Résultats de recherche</h2>
+          <p id="search-query-display" class="text-gray-500"></p>
+          <div class="glow-line max-w-xs mx-auto mt-6 rounded-full"></div>
+        </div>
+        <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="search-empty" class="hidden text-center py-16">
+          <i class="fas fa-search text-6xl text-gray-700 mb-4"></i>
+          <p class="text-gray-500 text-lg">Aucun résultat trouvé</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#0f172a] border-t border-white/5 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-white">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <img src="logo.png" alt="Logo" class="h-12 w-auto object-contain">
+            <div>
+              <h3 class="font-bold text-white">Excellence Media</h3>
+              <p class="text-xs text-emnBlue font-medium">Numérique</p>
+            </div>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed opacity-80">Votre média d'excellence pour l'information,
+            l'audiovisuel et des contenus de qualité au Congo-Brazzaville.</p>
+        </div>
+        <!-- Contact -->
+        <div>
+          <h4 class="font-semibold text-white mb-4 flex items-center gap-2 text-lg"><i
+              class="fas fa-address-book text-emnBlue"></i> Contact</h4>
+          <div class="space-y-3">
+            <a href="mailto:excellencemedianumerique@gmail.com"
+              class="flex items-center gap-3 text-gray-400 hover:text-white transition text-sm"><i
+                class="fas fa-envelope w-5 text-emnBlue"></i> excellencemedianumerique@gmail.com</a>
+            <a href="tel:+242065042588"
+              class="flex items-center gap-3 text-gray-400 hover:text-white transition text-sm"><i
+                class="fas fa-phone w-5 text-emnBlue"></i> +242 06 504 25 88</a>
+            <a href="#" onclick="downloadBrochure()"
+              class="flex items-center gap-3 text-gray-400 hover:text-white transition text-sm"><i
+                class="fas fa-file-pdf w-5 text-emnBlue"></i> Télécharger la brochure</a>
+          </div>
+        </div>
+        <!-- Social -->
+        <div>
+          <h4 class="font-semibold text-white mb-4 flex items-center gap-2 text-lg"><i
+              class="fas fa-share-nodes text-emnBlue"></i> Réseaux Sociaux</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <a href="https://www.youtube.com/@excellencemedianumerique" target="_blank"
+              class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition text-sm"><i
+                class="fab fa-youtube"></i> YouTube</a>
+            <a href="https://www.facebook.com/profile.php?id=61576697857842" target="_blank"
+              class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-blue-500/10 text-gray-400 hover:text-blue-400 transition text-sm"><i
+                class="fab fa-facebook"></i> Facebook</a>
+            <a href="https://twitter.com/MediaNumer55618" target="_blank"
+              class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-sky-500/10 text-gray-400 hover:text-sky-400 transition text-sm"><i
+                class="fab fa-x-twitter"></i> Twitter</a>
+            <a href="https://www.tiktok.com/@excellencemedianumerique" target="_blank"
+              class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-pink-500/10 text-gray-400 hover:text-pink-400 transition text-sm"><i
+                class="fab fa-tiktok"></i> TikTok</a>
+          </div>
+        </div>
+      </div>
+      <div class="glow-line rounded-full mb-6"></div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== ARTICLE MODAL (Presse) ===== -->
+  <div id="article-modal" class="modal-overlay fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70">
+    <div class="modal-content glass rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="relative">
+        <img id="article-modal-img" src="" alt="" class="w-full aspect-video object-cover rounded-t-2xl">
+        <button onclick="closeArticleModal()"
+          class="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition"><i
+            class="fas fa-times text-white"></i></button>
+      </div>
+      <div class="p-6">
+        <h3 id="article-modal-title" class="text-2xl font-bold gradient-text mb-4"></h3>
+        <p id="article-modal-desc" class="text-gray-300 leading-relaxed"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VIDEO MODAL ===== -->
+  <div id="video-modal" class="modal-overlay fixed inset-0 z-[75] flex items-center justify-center p-4 bg-black/80">
+    <div class="modal-content glass rounded-2xl max-w-4xl w-full aspect-video overflow-hidden relative">
+      <button onclick="closeVideoModal()"
+        class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition">
+        <i class="fas fa-times text-white"></i>
+      </button>
+      <div id="video-modal-container" class="w-full h-full bg-black"></div>
+    </div>
+  </div>
+
+  <!-- ===== AUTH MODAL ===== -->
+  <div id="auth-modal" class="modal-overlay fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/70">
+    <div class="modal-content glass rounded-2xl max-w-md w-full p-8 text-center">
+      <div
+        class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center mb-6 pulse-gold">
+        <i class="fas fa-shield-halved text-2xl text-dark-500"></i>
+      </div>
+      <h3 class="text-2xl font-bold gradient-text mb-2">Accès Dashboard</h3>
+      <p class="text-gray-400 text-sm mb-8">Connectez-vous avec votre compte Google pour accéder au panneau
+        d'administration.</p>
+      <div id="g_id_onload" data-client_id="204264169050-bqu39pj1pmtj5lih7lsceah0aqan1fsr.apps.googleusercontent.com"
+        data-callback="handleGoogleSignIn"></div>
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_black"
+        data-text="continue_with" data-shape="rectangular" data-logo_alignment="left"></div>
+      <button onclick="closeAuthModal()"
+        class="mt-6 text-sm text-gray-500 hover:text-gray-300 transition">Annuler</button>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD MODAL ===== -->
+  <div id="dashboard-modal" class="modal-overlay fixed inset-0 z-[70] flex bg-black/70">
+    <div
+      class="modal-content flex-1 max-w-6xl mx-auto my-4 bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl"
+      style="max-height: calc(100vh - 2rem);">
+      <!-- Dashboard Header -->
+      <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emnBlue/10 flex items-center justify-center"><i
+              class="fas fa-shield-halved text-emnBlue"></i></div>
+          <div>
+            <h3 class="font-bold text-emnBlue">Dashboard Admin</h3>
+            <p class="text-xs text-gray-500" id="admin-email-display"></p>
+          </div>
+        </div>
+        <button onclick="closeDashboard()"
+          class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"><i
+            class="fas fa-times text-xl text-gray-400"></i></button>
+      </div>
+
+      <!-- Dashboard Tabs -->
+      <div class="flex overflow-x-auto border-b border-gray-100 px-4 md:px-6 gap-1" id="dashboard-tabs">
+        <button onclick="switchDashTab('presse')"
+          class="dash-tab tab-active px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap transition"
+          data-tab="presse">Presse Écrite</button>
+        <button onclick="switchDashTab('audiovisuel')"
+          class="dash-tab px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap text-gray-400 hover:text-emnBlue transition"
+          data-tab="audiovisuel">Audio-visuel</button>
+        <button onclick="switchDashTab('emissions')"
+          class="dash-tab px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap text-gray-400 hover:text-emnBlue transition"
+          data-tab="emissions">Émissions</button>
+        <button onclick="switchDashTab('spots')"
+          class="dash-tab px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap text-gray-400 hover:text-emnBlue transition"
+          data-tab="spots">Spots</button>
+        <button onclick="switchDashTab('nocomment')"
+          class="dash-tab px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap text-gray-400 hover:text-emnBlue transition"
+          data-tab="nocomment">No-Comment</button>
+        <button onclick="switchDashTab('reorder')"
+          class="dash-tab px-4 py-3 text-sm font-medium rounded-t-lg whitespace-nowrap text-gray-400 hover:text-emnBlue transition"
+          data-tab="reorder"><i class="fas fa-arrows-up-down mr-1"></i> Réorganiser</button>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div class="flex-1 overflow-y-auto p-4 md:p-6" id="dashboard-content">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
