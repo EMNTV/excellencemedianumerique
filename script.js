@@ -1233,7 +1233,7 @@ function escapeHtml(text) {
 }
 
 function downloadBrochure() {
-  showNotification('Ouverture de la brochure...', 'info');
+  showNotification('EMNTV vous remercie pour le telechargement', 'info');
   window.open('brochure.pdf', '_blank');
 }
 
