@@ -358,9 +358,10 @@ async function handleGoogleSignIn(response) {
     // Décoder le token Google pour vérifier l'email
     const payload = JSON.parse(atob(response.credential.split('.')[1]));
     const email = payload.email;
+    const ADMIN_EMAIL = 'excellencemedianumerique@gmail.com';
 
     // Vérifier si c'est l'email admin
-    if (email !== 'excellencemedianumerique@gmail.com') {
+    if (email !== ADMIN_EMAIL) {
       showNotification('Accès refusé. Seul l\'administrateur peut accéder.', 'error');
       closeAuthModal();
       return;
@@ -1234,8 +1235,8 @@ function escapeHtml(text) {
 function downloadBrochure() {
   showNotification('Téléchargement de la brochure en cours...', 'info');
   const link = document.createElement('a');
-  link.href = '#';
-  link.download = '#';
+  link.href = 'Brochure.pdf';
+  link.download = 'Brochure.pdf';
   link.click();
 }
 
