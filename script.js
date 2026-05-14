@@ -1233,11 +1233,8 @@ function escapeHtml(text) {
 }
 
 function downloadBrochure() {
-  showNotification('Téléchargement de la brochure en cours...', 'info');
-  const link = document.createElement('a');
-  link.href = 'brochure.pdf';
-  link.download = 'brochure.pdf';
-  link.click();
+  showNotification('Ouverture de la brochure...', 'info');
+  window.open('brochure.pdf', '_blank');
 }
 
 // ============================================================
