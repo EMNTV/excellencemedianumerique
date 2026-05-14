@@ -1235,8 +1235,8 @@ function escapeHtml(text) {
 function downloadBrochure() {
   showNotification('Téléchargement de la brochure en cours...', 'info');
   const link = document.createElement('a');
-  link.href = 'Brochure.pdf';
-  link.download = 'Brochure.pdf';
+  link.href = 'brochure.pdf';
+  link.download = 'brochure.pdf';
   link.click();
 }
 
